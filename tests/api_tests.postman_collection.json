@@ -1,0 +1,1775 @@
+{
+	"info": {
+		"_postman_id": "10f8b1fe-eb1b-49d9-bd57-4ba9362d2d62",
+		"name": "Businesses API Tests",
+		"description": "A simple API for a Yelp-like application.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "businesses",
+			"item": [
+				{
+					"name": "{businessid}",
+					"item": [
+						{
+							"name": "Fetch data for a specific business.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/businesses/:businessid",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"businesses",
+										":businessid"
+									],
+									"variable": [
+										{
+											"key": "businessid",
+											"value": "7",
+											"type": "string",
+											"description": "(Required) Unique ID of a business."
+										}
+									]
+								},
+								"description": "Returns complete data for a the business specified by `businessid`.\n"
+							},
+							"response": [
+								{
+									"name": "Specified `businessid` not found.",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/businesses/:businessid",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"businesses",
+												":businessid"
+											],
+											"variable": [
+												{
+													"key": "businessid"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/businesses/:businessid",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"businesses",
+												":businessid"
+											],
+											"variable": [
+												{
+													"key": "businessid"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"ownerid\": 16,\n \"name\": \"American Dream Pizza\",\n \"address\": \"2525 NW Monroe Ave.\",\n \"city\": \"Corvallis\",\n \"state\": \"OR\",\n \"zip\": \"97330\",\n \"phone\": \"541-757-1713\",\n \"category\": \"Restaurant\",\n \"subcategory\": \"Pizza\",\n \"website\": \"http://adpizza.com\",\n \"email\": \"brian@adpizza.com\",\n \"reviews\": [\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"dollars\": 3,\n   \"stars\": 5,\n   \"review\": \"Great produce!\"\n  },\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"dollars\": 3,\n   \"stars\": 5,\n   \"review\": \"Great produce!\"\n  }\n ],\n \"photos\": [\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"caption\": \"Kale!\"\n  },\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"caption\": \"Kale!\"\n  }\n ]\n}"
+								}
+							]
+						},
+						{
+							"name": "Update data for a specific business.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"ownerid\": 7,\n\t\"name\": \"Allan's Coffee & Tea\",\n\t\"address\": \"2541 NW Monroe Ave.\",\n\t\"city\": \"Corvallis\",\n\t\"state\": \"OR\",\n\t\"zip\": \"97330\",\n\t\"phone\": \"541-757-0828\",\n\t\"category\": \"Restaurant\",\n\t\"subcategory\": \"Coffee Shop\",\n\t\"website\": \"https://www.allanscoffee.com/\"\n}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/businesses/:businessid",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"businesses",
+										":businessid"
+									],
+									"variable": [
+										{
+											"key": "businessid",
+											"value": "19",
+											"type": "string",
+											"description": "(Required) Unique ID of a business."
+										}
+									]
+								},
+								"description": "Replaces the data for the business specified by `businessid`.\n"
+							},
+							"response": [
+								{
+									"name": "Specified `businessid` not found",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"ownerid\": 16,\n    \"name\": \"American Dream Pizza\",\n    \"address\": \"2525 NW Monroe Ave.\",\n    \"city\": \"Corvallis\",\n    \"state\": \"OR\",\n    \"zip\": \"97330\",\n    \"phone\": \"541-757-1713\",\n    \"category\": \"Restaurant\",\n    \"subcategory\": \"Pizza\",\n    \"website\": \"http://adpizza.com\",\n    \"email\": \"brian@adpizza.com\",\n    \"reviews\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        }\n    ],\n    \"photos\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/businesses/:businessid",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"businesses",
+												":businessid"
+											],
+											"variable": [
+												{
+													"key": "businessid"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"ownerid\": 16,\n    \"name\": \"American Dream Pizza\",\n    \"address\": \"2525 NW Monroe Ave.\",\n    \"city\": \"Corvallis\",\n    \"state\": \"OR\",\n    \"zip\": \"97330\",\n    \"phone\": \"541-757-1713\",\n    \"category\": \"Restaurant\",\n    \"subcategory\": \"Pizza\",\n    \"website\": \"http://adpizza.com\",\n    \"email\": \"brian@adpizza.com\",\n    \"reviews\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        }\n    ],\n    \"photos\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/businesses/:businessid",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"businesses",
+												":businessid"
+											],
+											"variable": [
+												{
+													"key": "businessid"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "The request body was either not present or did not contain all of the required fields.",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"ownerid\": 16,\n    \"name\": \"American Dream Pizza\",\n    \"address\": \"2525 NW Monroe Ave.\",\n    \"city\": \"Corvallis\",\n    \"state\": \"OR\",\n    \"zip\": \"97330\",\n    \"phone\": \"541-757-1713\",\n    \"category\": \"Restaurant\",\n    \"subcategory\": \"Pizza\",\n    \"website\": \"http://adpizza.com\",\n    \"email\": \"brian@adpizza.com\",\n    \"reviews\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        }\n    ],\n    \"photos\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/businesses/:businessid",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"businesses",
+												":businessid"
+											],
+											"variable": [
+												{
+													"key": "businessid"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Remove a specific business from the database.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/businesses/:businessid",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"businesses",
+										":businessid"
+									],
+									"variable": [
+										{
+											"key": "businessid",
+											"value": "8",
+											"type": "string",
+											"description": "(Required) Unique ID of a business."
+										}
+									]
+								},
+								"description": "Completely removes the data for the business specified by `businessid`.\n"
+							},
+							"response": [
+								{
+									"name": "Specified `businessid` not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/businesses/:businessid",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"businesses",
+												":businessid"
+											],
+											"variable": [
+												{
+													"key": "businessid"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/businesses/:businessid",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"businesses",
+												":businessid"
+											],
+											"variable": [
+												{
+													"key": "businessid"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Fetch a list of businesses",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/businesses?page=1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"businesses"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Specifies a specific page of businesses to request.\n"
+								}
+							]
+						},
+						"description": "Returns a paginated list of businesses.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/businesses?page=1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"businesses"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"pageNumber\": 1,\n \"totalPages\": 127,\n \"pageSize\": 10,\n \"totalCount\": 1264,\n \"lodgings\": [\n  {\n   \"ownerid\": 16,\n   \"name\": \"American Dream Pizza\",\n   \"address\": \"2525 NW Monroe Ave.\",\n   \"city\": \"Corvallis\",\n   \"state\": \"OR\",\n   \"zip\": \"97330\",\n   \"phone\": \"541-757-1713\",\n   \"category\": \"Restaurant\",\n   \"subcategory\": \"Pizza\",\n   \"website\": \"http://adpizza.com\",\n   \"email\": \"brian@adpizza.com\",\n   \"reviews\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    }\n   ],\n   \"photos\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    }\n   ]\n  },\n  {\n   \"ownerid\": 16,\n   \"name\": \"American Dream Pizza\",\n   \"address\": \"2525 NW Monroe Ave.\",\n   \"city\": \"Corvallis\",\n   \"state\": \"OR\",\n   \"zip\": \"97330\",\n   \"phone\": \"541-757-1713\",\n   \"category\": \"Restaurant\",\n   \"subcategory\": \"Pizza\",\n   \"website\": \"http://adpizza.com\",\n   \"email\": \"brian@adpizza.com\",\n   \"reviews\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    }\n   ],\n   \"photos\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    }\n   ]\n  }\n ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Add a new business",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"ownerid\": 16,\n    \"name\": \"American Dream Pizza\",\n    \"address\": \"2525 NW Monroe Ave.\",\n    \"city\": \"Corvallis\",\n    \"state\": \"OR\",\n    \"zip\": \"97330\",\n    \"phone\": \"541-757-1713\",\n    \"category\": \"Restaurant\",\n    \"subcategory\": \"Pizza\",\n    \"website\": \"http://adpizza.com\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/businesses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"businesses"
+							]
+						},
+						"description": "Creates a new business with specified data and adds it to the application's database.\n"
+					},
+					"response": [
+						{
+							"name": "New business successfully added",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ownerid\": 16,\n    \"name\": \"American Dream Pizza\",\n    \"address\": \"2525 NW Monroe Ave.\",\n    \"city\": \"Corvallis\",\n    \"state\": \"OR\",\n    \"zip\": \"97330\",\n    \"phone\": \"541-757-1713\",\n    \"category\": \"Restaurant\",\n    \"subcategory\": \"Pizza\",\n    \"website\": \"http://adpizza.com\",\n    \"email\": \"brian@adpizza.com\",\n    \"reviews\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        }\n    ],\n    \"photos\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/businesses",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"businesses"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"id\": 19\n}"
+						},
+						{
+							"name": "The request body was either not present or did not contain all of the required fields.",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"ownerid\": 16,\n    \"name\": \"American Dream Pizza\",\n    \"address\": \"2525 NW Monroe Ave.\",\n    \"city\": \"Corvallis\",\n    \"state\": \"OR\",\n    \"zip\": \"97330\",\n    \"phone\": \"541-757-1713\",\n    \"category\": \"Restaurant\",\n    \"subcategory\": \"Pizza\",\n    \"website\": \"http://adpizza.com\",\n    \"email\": \"brian@adpizza.com\",\n    \"reviews\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"dollars\": 3,\n            \"stars\": 5,\n            \"review\": \"Great produce!\"\n        }\n    ],\n    \"photos\": [\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        },\n        {\n            \"userid\": 7,\n            \"businessid\": 3,\n            \"caption\": \"Kale!\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/businesses",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"businesses"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"error\": \"<string>\"\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "photos",
+			"item": [
+				{
+					"name": "{photo ID}",
+					"item": [
+						{
+							"name": "Fetch data for a specific photo.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/photos/:photoID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"photos",
+										":photoID"
+									],
+									"variable": [
+										{
+											"key": "photoID",
+											"value": "3",
+											"type": "string",
+											"description": "(Required) Unique ID of a photo."
+										}
+									]
+								},
+								"description": "Returns complete data for a the photo specified by `photoID`.\n"
+							},
+							"response": [
+								{
+									"name": "Specified `photoID` not found.",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"userid\": 7,\n \"businessid\": 3,\n \"caption\": \"Kale!\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update data for a specific photo.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userid\": 7,\n    \"businessid\": 2,\n    \"caption\": \"Look at this sweet bag of mixed fasteners I just bought!\"\n}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/photos/:photoID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"photos",
+										":photoID"
+									],
+									"variable": [
+										{
+											"key": "photoID",
+											"value": "2",
+											"type": "string",
+											"description": "(Required) Unique ID of a photo."
+										}
+									]
+								},
+								"description": "Replaces the data for the photo specified by `photo`.\n"
+							},
+							"response": [
+								{
+									"name": "Specified `photoID` not found",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"caption\": \"Kale!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "The request body was either not present or did not contain all of the required fields.\n",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"caption\": \"Kale!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"caption\": \"Kale!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "The request tried to change the `userid` or the `businessid` for a photo.  Once a photo is created, these cannot be changed.\n",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"caption\": \"Kale!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Remove a specific photo from the database.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/photos/:photoID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"photos",
+										":photoID"
+									],
+									"variable": [
+										{
+											"key": "photoID",
+											"value": "8",
+											"type": "string",
+											"description": "(Required) Unique ID of a photo."
+										}
+									]
+								},
+								"description": "Completely removes the data for the photo specified by `photoID`.\n"
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Specified `photoID` not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/photos/:photoID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"photos",
+												":photoID"
+											],
+											"variable": [
+												{
+													"key": "photoID"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Add a new photo",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userid\": 1,\n    \"businessid\": 10,\n    \"caption\": \"So many books!\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/photos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"photos"
+							]
+						},
+						"description": "Creates a new photo with specified data and adds it to the application's database.\n"
+					},
+					"response": [
+						{
+							"name": "The request body was either not present or did not contain all of the required fields.",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"caption\": \"Kale!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/photos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"photos"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"error\": \"<string>\"\n}"
+						},
+						{
+							"name": "New photo successfully added",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"caption\": \"Kale!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/photos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"photos"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"id\": 10\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "reviews",
+			"item": [
+				{
+					"name": "{review ID}",
+					"item": [
+						{
+							"name": "Fetch data for a specific review.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/reviews/:reviewID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews",
+										":reviewID"
+									],
+									"variable": [
+										{
+											"key": "reviewID",
+											"value": "3",
+											"type": "string",
+											"description": "(Required) Unique ID of a review."
+										}
+									]
+								},
+								"description": "Returns complete data for a the review specified by `reviewID`.\n"
+							},
+							"response": [
+								{
+									"name": "Specified `reviewID` not found.",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"userid\": 7,\n \"businessid\": 3,\n \"dollars\": 3,\n \"stars\": 5,\n \"review\": \"Great produce!\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update data for a specific review.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userid\": 5,\n    \"businessid\": 2,\n    \"dollars\": 1,\n    \"stars\": 5,\n    \"review\": \"How many fasteners can one room hold?\"\n}",
+									"options": {
+										"raw": {}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews/:reviewID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews",
+										":reviewID"
+									],
+									"variable": [
+										{
+											"key": "reviewID",
+											"value": "8",
+											"type": "string",
+											"description": "(Required) Unique ID of a review."
+										}
+									]
+								},
+								"description": "Replaces the data for the review specified by `review`.\n"
+							},
+							"response": [
+								{
+									"name": "The request tried to change the `userid` or the `businessid` for a review.  Once a review is created, these cannot be changed.\n",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"dollars\": 3,\n    \"stars\": 5,\n    \"review\": \"Great produce!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Specified `reviewID` not found",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"dollars\": 3,\n    \"stars\": 5,\n    \"review\": \"Great produce!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "The request body was either not present or did not contain all of the required fields.\n",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"dollars\": 3,\n    \"stars\": 5,\n    \"review\": \"Great produce!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								},
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"dollars\": 3,\n    \"stars\": 5,\n    \"review\": \"Great produce!\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								}
+							]
+						},
+						{
+							"name": "Remove a specific review from the database.",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/reviews/:reviewID",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews",
+										":reviewID"
+									],
+									"variable": [
+										{
+											"key": "reviewID",
+											"value": "7",
+											"type": "string",
+											"description": "(Required) Unique ID of a review."
+										}
+									]
+								},
+								"description": "Completely removes the data for the review specified by `reviewID`.\n"
+							},
+							"response": [
+								{
+									"name": "Success",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "text/plain"
+										}
+									],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Specified `reviewID` not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/reviews/:reviewID",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"reviews",
+												":reviewID"
+											],
+											"variable": [
+												{
+													"key": "reviewID"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"error\": \"<string>\"\n}"
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Add a new review",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userid\": 21,\n    \"businessid\": 10,\n    \"dollars\": 1,\n    \"stars\": 5,\n    \"review\": \"My favorite bookstore.\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"reviews"
+							]
+						},
+						"description": "Creates a new review with specified data and adds it to the application's database.\n"
+					},
+					"response": [
+						{
+							"name": "The specified user has already posted a review for the specified business.  A given user may only post one review for a given business.\n",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"dollars\": 3,\n    \"stars\": 5,\n    \"review\": \"Great produce!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"error\": \"<string>\"\n}"
+						},
+						{
+							"name": "The request body was either not present or did not contain all of the required fields.\n",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"dollars\": 3,\n    \"stars\": 5,\n    \"review\": \"Great produce!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"error\": \"<string>\"\n}"
+						},
+						{
+							"name": "New review successfully added",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"userid\": 7,\n    \"businessid\": 3,\n    \"dollars\": 3,\n    \"stars\": 5,\n    \"review\": \"Great produce!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"reviews"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"id\": 10\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "users/{userid}",
+			"item": [
+				{
+					"name": "Fetch a user's owned businesses.",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:userid/businesses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":userid",
+								"businesses"
+							],
+							"variable": [
+								{
+									"key": "userid",
+									"value": "1",
+									"type": "string",
+									"description": "(Required) Unique ID of a user."
+								}
+							]
+						},
+						"description": "Returns a list of all of the businesses owned by the user specified by `userid`.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:userid/businesses",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userid",
+										"businesses"
+									],
+									"variable": [
+										{
+											"key": "userid"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"lodgings\": [\n  {\n   \"ownerid\": 16,\n   \"name\": \"American Dream Pizza\",\n   \"address\": \"2525 NW Monroe Ave.\",\n   \"city\": \"Corvallis\",\n   \"state\": \"OR\",\n   \"zip\": \"97330\",\n   \"phone\": \"541-757-1713\",\n   \"category\": \"Restaurant\",\n   \"subcategory\": \"Pizza\",\n   \"website\": \"http://adpizza.com\",\n   \"email\": \"brian@adpizza.com\",\n   \"reviews\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    }\n   ],\n   \"photos\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    }\n   ]\n  },\n  {\n   \"ownerid\": 16,\n   \"name\": \"American Dream Pizza\",\n   \"address\": \"2525 NW Monroe Ave.\",\n   \"city\": \"Corvallis\",\n   \"state\": \"OR\",\n   \"zip\": \"97330\",\n   \"phone\": \"541-757-1713\",\n   \"category\": \"Restaurant\",\n   \"subcategory\": \"Pizza\",\n   \"website\": \"http://adpizza.com\",\n   \"email\": \"brian@adpizza.com\",\n   \"reviews\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"dollars\": 3,\n     \"stars\": 5,\n     \"review\": \"Great produce!\"\n    }\n   ],\n   \"photos\": [\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    },\n    {\n     \"userid\": 7,\n     \"businessid\": 3,\n     \"caption\": \"Kale!\"\n    }\n   ]\n  }\n ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Fetch a user's photos.",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:userid/photos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":userid",
+								"photos"
+							],
+							"variable": [
+								{
+									"key": "userid",
+									"value": "2",
+									"type": "string",
+									"description": "(Required) Unique ID of a user."
+								}
+							]
+						},
+						"description": "Returns a list of all of the photos posted by the user specified by `userid`.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:userid/photos",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userid",
+										"photos"
+									],
+									"variable": [
+										{
+											"key": "userid"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"lodgings\": [\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"caption\": \"Kale!\"\n  },\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"caption\": \"Kale!\"\n  }\n ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Fetch a user's reviews.",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/:userid/reviews",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":userid",
+								"reviews"
+							],
+							"variable": [
+								{
+									"key": "userid",
+									"value": "5",
+									"type": "string",
+									"description": "(Required) Unique ID of a user."
+								}
+							]
+						},
+						"description": "Returns a list of all of the reviews written by the user specified by `userid`.\n"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/:userid/reviews",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										":userid",
+										"reviews"
+									],
+									"variable": [
+										{
+											"key": "userid"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"lodgings\": [\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"dollars\": 3,\n   \"stars\": 5,\n   \"review\": \"Great produce!\"\n  },\n  {\n   \"userid\": 7,\n   \"businessid\": 3,\n   \"dollars\": 3,\n   \"stars\": 5,\n   \"review\": \"Great produce!\"\n  }\n ]\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ace8995f-e2f2-40f5-8d8d-f61fac986d6d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "08267e8e-77ce-41bb-ba37-5c25a83dcb84",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
