@@ -3,6 +3,34 @@ const { ObjectId, GridFSBucket } = require('mongodb');
 
 const { getDBReference } = require('../lib/mongo');
 
+const PhotoSchema = {
+  title: { required: true },
+  desciption: { required: false }
+};
+exports.PhotoSchema = PhotoSchema;
+
+
+const insertNewPhoto = async (photo) => new Promise((resolve, reject) => {
+  const db = getDBReference();
+  const bucket = new GridFSBucket(db, { bucketName: 'photos'});
+  const metadata = {
+    contentType: photo.contentType,
+    businessid: photo.businessid,
+    caption: photo.caption
+  };
+  const uploadStream = bucket.openUploadStream(photo.filename,
+    { metadata: metadata });
+  fs.createReadStream(photo.path).pipe(uploadStream)
+      .on('error', (err) => {
+        reject(err);
+      })
+      .on('finish', (result) => {
+        resolve(result._id);
+      });
+});
+exports.insertNewPhoto = insertNewPhoto;
+
+
 exports.saveImageInfo = async function (image) {
   const db = getDBReference();
   const collection = db.collection('images');

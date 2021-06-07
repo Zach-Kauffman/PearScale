@@ -21,12 +21,6 @@ app.use(express.static('public'));
  */
 app.use('/', api);
 
-/*
- * All routes for the API are written in modules in the api/ directory.  The
- * top-level router lives in api/index.js.  That's what we include here, and
- * it provides all of the routes.
- */
-app.use('/', api);
 
 app.use('*', function (req, res, next) {
   res.status(404).json({

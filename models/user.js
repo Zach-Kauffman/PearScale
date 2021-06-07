@@ -8,9 +8,18 @@ const { extractValidFields } = require('../lib/validation');
  */
 const UserSchema = {
   name: { required: true },
+  email: { required: true },
+  password: { required: true },
 };
 exports.UserSchema = UserSchema;
 
+async function insertNewUser(user) {
+  const db = getDBReference();
+  const collection = db.collection('users');
+  const result = collection.insertOne(user);
+  return result;
+}
+exports.insertNewUser = insertNewUser;
 async function getAllUsers(id) {
     const db = getDBReference();
     const collection = db.collection('users');

@@ -1,6 +1,7 @@
 
 const router = require('express').Router();
-
+const multer = require('multer');
+const crypto = require('crypto');
 const { requireAuthentication } = require('../lib/auth');
 const { validateAgainstSchema } = require('../lib/validation');
 const {
@@ -42,28 +43,66 @@ router.get('/', async (req, res) => {
   }
 });
 
+const {
+  PhotoSchema,
+  insertNewPhoto,
+  getPhotoById
+} = require('../models/image');
+
+const acceptedFileTypes = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: `${__dirname}/uploads`,
+    filename: (req, file, callback) => {
+      const filename = crypto.pseudoRandomBytes(16).toString('hex');
+      const extension = acceptedFileTypes[file.mimetype];
+      callback(null, `${filename}.${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    callback(null, !!acceptedFileTypes[file.mimetype])
+  }
+});
+
 /*
- * Route to create a new slice.
+ * Route to create a new photo.
  */
-router.post('/', requireAuthentication, async (req, res) => {
-  if (validateAgainstSchema(req.body, SliceSchema)) {
+router.post('/:slicename', upload.single('photo'), async (req, res) => {
+  console.log("== req.body:", req.body);
+  console.log("== req.file:", req.file);
+  if (validateAgainstSchema(req.body, PhotoSchema) && req.file && req.body) {
     try {
-      const id = await insertNewSlice(req.body);
+      const image = {
+        contentType: req.file.mimetype,
+        description: req.body.description,
+        filename: req.file.filename,
+        slice: req.params.slicename,
+        path: req.file.path,
+      }
+      const id = await insertNewPhoto(image);
+      await fs.unlink(req.file.path);
+      const channel = getChannel();
+      channel.sendToQueue('photos', Buffer.from(id.toString()));
       res.status(201).send({
         id: id,
         links: {
-          slice: `/slices/${id}`
+          photo: `/photos/${id}`,
+          business: `/businesses/${req.body.businessid}`
         }
       });
     } catch (err) {
       console.error(err);
       res.status(500).send({
-        error: "Error inserting slice into DB.  Please try again later."
+        error: "Error inserting photo into DB.  Please try again later."
       });
     }
   } else {
     res.status(400).send({
-      error: "Request body is not a valid slice object."
+      error: "Request body is not a valid photo object"
     });
   }
 });
@@ -71,7 +110,7 @@ router.post('/', requireAuthentication, async (req, res) => {
 /*
  * Route to fetch info about a specific slice.
  */
-router.get('/:id', async (req, res, next) => {
+router.get('/:slicename', async (req, res, next) => {
   try {
     const slice = await getSliceDetailsById(parseInt(req.params.id));
     if (slice) {
@@ -90,7 +129,7 @@ router.get('/:id', async (req, res, next) => {
 /*
  * Route to replace data for a slice.
  */
-router.put('/:id', requireAuthentication, async (req, res, next) => {
+router.put('/:slicename', requireAuthentication, async (req, res, next) => {
   if (req.user.id == req.body.ownerid || req.user.admin === 1) {
     if (validateAgainstSchema(req.body, SliceSchema)) {
       try {
