@@ -14,29 +14,11 @@ const {
   getPearDetailsById
 } = require('../models/pear');
 
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: `${__dirname}/uploads`,
-    filename: (req, file, callback) => {
-      const filename = crypto.pseudoRandomBytes(16).toString('hex');
-      const extension = acceptedFileTypes[file.mimetype];
-      callback(null, `${filename}.${extension}`);
-    }
-  }),
-  fileFilter: (req, file, callback) => {
-    callback(null, !!acceptedFileTypes[file.mimetype])
-  }
-});
-
 /*
  * Route to return a paginated list of pears.
  */
 router.get('/', async (req, res) => {
   try {
-    /*
-     * Fetch page info, generate HATEOAS links for surrounding pages and then
-     * send response.
-     */
     const pearPage = await getPearsPage(parseInt(req.query.page) || 1);
     pearPage.links = {};
     if (pearPage.page < pearPage.totalPages) {
