@@ -1,0 +1,355 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: Businesses API
+  description: A simple API for a Yelp-like application.
+
+paths:
+  /businesses:
+    get:
+      summary: Fetch a list of businesses
+      description: >
+        Returns a paginated list of businesses.
+      operationId: getBusinessesPage
+      tags:
+        - Businesses
+      parameters:
+        - name: page
+          in: query
+          description: >
+            Specifies a specific page of businesses to request.
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pageNumber:
+                    type: integer
+                    description: Page number of returned businesses.
+                    example: 1
+                  totalPages:
+                    type: integer
+                    description: Total number of pages available.
+                    example: 127
+                  pageSize:
+                    type: integer
+                    description: Number of businesses per page.
+                    example: 10
+                  totalCount:
+                    type: integer
+                    description: Total number of businesses.
+                    example: 1264
+                  lodgings:
+                    type: array
+                    description: The returned businesses.
+                    items:
+                      $ref: '#/components/schemas/Business'
+    post:
+      summary: Add a new business
+      description: >
+        Creates a new business with specified data and adds it to the
+        application's database.
+      operationId: addBusiness
+      tags:
+        - Businesses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Business'
+      responses:
+        '201':
+          description: New business successfully added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Unique ID of the created business.
+                    example: 19
+        '400':
+          description: >
+            The request body was either not present or did not contain all of
+            the required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  '/businesses/{businessid}':
+    parameters:
+      - name: businessid
+        in: path
+        description: Unique ID of a business.
+        required: true
+        schema:
+          type: string
+          example: 5ce48a2ddf60d448aed2b1d5
+    get:
+      summary: Fetch data for a specific business.
+      description: >
+        Returns complete data for a the business specified by `businessid`.
+      operationId: getBusinessById
+      tags:
+        - Businesses
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Business'
+        '404':
+          description: Specified `businessid` not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /photos:
+    post:
+      summary: Add a new photo
+      description: >
+        Creates a new photo with specified data and adds it to the
+        application's database.
+      operationId: addPhoto
+      tags:
+        - Photos
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Photo'
+      responses:
+        '201':
+          description: New photo successfully added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Unique ID of the created photo.
+                    example: 10
+        '400':
+          description: >
+            The request body was either not present or did not contain all of
+            the required fields.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  '/photos/{photoID}':
+    parameters:
+      - name: photoID
+        in: path
+        description: Unique ID of a photo.
+        required: true
+        schema:
+          type: string
+          example: 5ce48a2ddf60d448aed2b1c3
+    get:
+      summary: Fetch data for a specific photo.
+      description: >
+        Returns complete data for a the photo specified by `photoID`.
+      operationId: getPhotoById
+      tags:
+        - Photos
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Photo'
+        '404':
+          description: Specified `photoID` not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  '/media/photos/{photoID}-{size}.jpg':
+    parameters:
+      - name: photoID
+        in: path
+        description: Unique ID of a photo.
+        required: true
+        schema:
+          type: string
+          example: 5ce48a2ddf60d448aed2b1c3
+      - name: size
+        in: path
+        description: |
+          Size code indicating the image size to be downloaded.  This can be
+          one of the following values:
+            * '1024' - maximum side length 1024px
+            * '640' - maximum side length 640px
+            * '256' - maximum side length 256px
+            * '128' - maximum side length 128px
+            * 'orig' - original upload size
+        required: true
+        schema:
+          type: string
+          example: orig
+
+    get:
+      summary: Download a photo.
+      description: >
+        Downloads the photo data for the specified `photoId`.  The downloaded
+        photo will be sized according to the specified `size` code specified
+        in the URL.
+      operationId: downloadPhoto
+      tags:
+        - NewStuff
+        - Photos
+      responses:
+        '200':
+          description: Image data for the specified photo.
+          content:
+            image/jpeg:
+              schema:
+                type: string
+        '404':
+          description: Specified `photoId` or `size` not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Business:
+      description: >
+        An object representing information about a single business.
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the business.
+          example: American Dream Pizza
+        address:
+          type: object
+          properties:
+            street:
+              type: string
+              description: Street address of the business.
+              example: 2525 NW Monroe Ave.
+            city:
+              type: string
+              description: The city in which the business resides.
+              example: Corvallis
+            state:
+              type: string
+              description: The state in which the business resides.
+              example: OR
+            zip:
+              type: string
+              description: >
+                The zip code of the city in which the business resides.
+              example: '97330'
+        phone:
+          type: string
+          description: The business' phone number.
+          example: '541-757-1713'
+        category:
+          type: string
+          description: The business' category.
+          example: 'Restaurant'
+        subcategory:
+          type: string
+          description: The business' subcategory.
+          example: 'Pizza'
+        website:
+          type: string
+          description: The business' website URL.
+          example: 'http://adpizza.com'
+        email:
+          type: string
+          description: The business' email address.
+          example: 'brian@adpizza.com'
+        photos:
+          type: array
+          description: >
+            An array of photos of the business.  These are only returned when
+            fetching detailed information about a business.
+          items:
+            $ref: '#/components/schemas/Photo'
+      required:
+        - name
+        - address
+        - phone
+        - category
+        - subcategory
+
+    Photo:
+      description: >
+        An object representing information about a photo of a business.
+      type: object
+      properties:
+        businessid:
+          type: string
+          description: >
+            The ID of the business associated with this photo.  This is
+            required when creating a photo.
+          example: 5ce48a2ddf60d448aed2b1d5
+        caption:
+          type: string
+          description: Caption text for the photo
+          example: "Kale!"
+        file:
+          type: string
+          description: >
+            When the photo is being uploaded, this field will hold the binary
+            data contained in the photo file.  This is required only when
+            creating a photo.
+        urls:
+          type: object
+          description: >
+            When photo information is fetched from the API, this field will
+            contain an object that specifies all images available for
+            download for this photo.  The object will contain a single entry
+            per available image size.  For example, if the '1024' image size
+            is available for this photo, this object will contain a '1024'
+            entry.
+          example:
+            '1024': /media/photos/5ce48a2ddf60d448aed2b1c3-1024.jpg
+            '640': /media/photos/5ce48a2ddf60d448aed2b1c3-640.jpg
+            '256': /media/photos/5ce48a2ddf60d448aed2b1c3-256.jpg
+            '128': /media/photos/5ce48a2ddf60d448aed2b1c3-128.jpg
+            'orig': /media/photos/5ce48a2ddf60d448aed2b1c3-orig.jpg
+      required:
+        - businessid
+        - file
+
+    Error:
+      description: >
+        An object representing an error response from the API.
+      type: object
+      properties:
+        error:
+          type: string
+          description: A message describing the error.
+tags:
+  - name: NewStuff
+    description: >
+      New things to implement for this assignment.
+  - name: Businesses
+    description: >
+      API endpoints related to business resources.
+  - name: Photos
+    description: >
+      API endpoints related to photo resources.
