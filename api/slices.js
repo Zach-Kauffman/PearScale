@@ -110,7 +110,8 @@ router.post('/:slicename', upload.single('image'), async (req, res) => {
 router.post('/', async (req, res) => {
   const slice = {
     title: (req.body) ? req.body.title : undefined,
-    description: (req.body) ? (req.body.description) : undefined
+    description: (req.body) ? (req.body.description) : undefined,
+    ownerid: (req.body) ? (req.body.ownerid) : undefined,
   };
   if (validateAgainstSchema(slice, SliceSchema)) {
     try {
