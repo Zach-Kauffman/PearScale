@@ -59,12 +59,22 @@ exports.getPearsPage = getPearsPage;
  * Executes a DB query to insert a new pear into the database.  Returns
  * a Promise that resolves to the ID of the newly-created pear entry.
  */
-async function insertNewPear(pear) {
-  pear = extractValidFields(pear, PearSchema);
+const insertNewPear = async (pear) => {
   const db = getDBReference();
-  const collection = db.collection('pears');
-  const result = await collection.insertOne(pear);
-  return result.insertedId;
+  const bucket = new GridFSBucket(db, { bucketName: 'pears'});
+  const metadata = {
+    slice: pear.slice,
+    contentType: pear.contentType,
+    description: pear.description,
+  }
+  const uploadStream = bucket.openUploadStream(pear.filename, { metadata: metadata });
+  fs.createReadStream(pear.path).pipe(uploadStream)
+      .on('error', (err) => {
+        reject(err);
+      })
+      .on('finish', (result) => {
+        resolve(result._id);
+      });
 }
 exports.insertNewPear = insertNewPear;
 
@@ -124,6 +134,19 @@ async function getPearById(id) {
     return results[0];
   }
 }
+//Gets all pears attatched to slicename //TODOGregory
+async function getPearBySlicename(slice) {
+  const db = getDBReference();
+  const collection = db.collection('pears');
+  if (!ObjectId.isValid(id)) {
+    return null;
+  } else {
+    const results = await collection
+      .find({ "sliceid": slice })
+      .toArray();
+    return results[0];
+  }
+}
 
 /*
  * Executes a DB query to fetch detailed information about a single
@@ -132,18 +155,19 @@ async function getPearById(id) {
  * information about the requested pear.  If no pear with the
  * specified ID exists, the returned Promise will resolve to null.
  */
-async function getPearDetailsById(id) {
-  /*
-   * Execute three sequential queries to get all of the info about the
-   * specified pear, including its photos.
-   */
-  const pear = await getPearById(id);
-  if (pear) {
-    pear.reviews = await getReviewsByPearId(id);
+async function getPearWithReviews(id) {
+  const db = getDBReference();
+  const collection = db.collection('pears');
+  if (!ObjectId.isValid(id)) {
+    return null;
+  } else {
+    const results = await collection
+      .find({ _id: id})
+      .toArray();
+    return results[0];
   }
-  return pear;
 }
-exports.getPearDetailsById = getPearDetailsById;
+exports.getPearWithReviews = getPearWithReviews;
 
 
 /*

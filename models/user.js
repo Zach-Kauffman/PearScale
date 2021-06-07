@@ -10,6 +10,7 @@ const UserSchema = {
   name: { required: true },
   email: {required: true },
   password: { required: true }
+
 };
 exports.UserSchema = UserSchema;
 

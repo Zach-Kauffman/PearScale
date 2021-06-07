@@ -2,7 +2,9 @@
  * API sub-router for pears collection endpoints.
  */
 
-const router = require('express').Router();
+const multer = require('multer');
+const crypto = require('crypto');
+const router = require('express').Router()
 
 const { validateAgainstSchema } = require('../lib/validation');
 const {
@@ -11,6 +13,20 @@ const {
   insertNewPear,
   getPearDetailsById
 } = require('../models/pear');
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: `${__dirname}/uploads`,
+    filename: (req, file, callback) => {
+      const filename = crypto.pseudoRandomBytes(16).toString('hex');
+      const extension = acceptedFileTypes[file.mimetype];
+      callback(null, `${filename}.${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    callback(null, !!acceptedFileTypes[file.mimetype])
+  }
+});
 
 /*
  * Route to return a paginated list of pears.
@@ -40,38 +56,34 @@ router.get('/', async (req, res) => {
   }
 });
 
-/*
- * Route to create a new pear.
- */
-router.post('/', async (req, res) => {
-  if (validateAgainstSchema(req.body, PearSchema)) {
-    try {
-      const id = await insertNewPear(req.body);
-      res.status(201).send({
-        id: id,
-        links: {
-          pear: `/pears/${id}`
-        }
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send({
-        error: "Error inserting pear into DB.  Please try again later."
-      });
-    }
-  } else {
-    res.status(400).send({
-      error: "Request body is not a valid pear object."
-    });
-  }
-});
 
 /*
  * Route to fetch info about a specific pear.
  */
 router.get('/:id', async (req, res, next) => {
   try {
-    const pear = await getPearDetailsById(req.params.id);
+    const pear = await getPearDown(req.params.id);
+    const reviews = await getReviewsByPearId(req.params.id);
+    if (pear && reviews) {
+      pear.reviews = reviews;
+      const response = {
+        reviews: pear.reviews,
+      }
+      res.status(200).send(pear);
+    } else {
+      next();
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      error: "Unable to fetch pear.  Please try again later."
+    });
+  }
+});
+
+router.get('/:id/image', async (req, res, next) => {
+  try {
+    const pear = await getPearDown(req.params.id);
     if (pear) {
       res.status(200).send(pear);
     } else {
@@ -84,5 +96,7 @@ router.get('/:id', async (req, res, next) => {
     });
   }
 });
+
+
 
 module.exports = router;

@@ -11,6 +11,7 @@ const {
   validateUser,
   validateUserByEmail,
   getUserByEmail
+
 } = require('../models/user');
 const { validateAgainstSchema } = require('../lib/validation');
 
@@ -82,7 +83,6 @@ router.post('/login', async (req, res) => {
 
 //Absolutely terrible funciton
 router.post('/', async (req, res, next) => {  
-
   //if admin check admin
   if (req.body.admin == true) {
 
@@ -109,6 +109,7 @@ router.post('/', async (req, res, next) => {
             });
           }
         } else {
+          
           res.status(400).send({
             error: "Request body does not contain a valid User."
           });

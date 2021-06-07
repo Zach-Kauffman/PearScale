@@ -9,8 +9,7 @@ const { getReviewsBySliceId } = require('./review');
  */
 const SliceSchema = {
   title: { required: true },
-  description: { required: false },
-  authorid: {required: true},
+  description: { required: true },
 };
 exports.SliceSchema = SliceSchema;
 
@@ -54,11 +53,15 @@ exports.getSlicesPage = getSlicesPage;
  * a Promise that resolves to the ID of the newly-created slice entry.
  */
 async function insertNewSlice(slice) {
-  slice = extractValidFields(slice, SliceSchema);
-  const db = getDBReference();
-  const collection = db.collection('slices');
-  const result = await collection.insertOne(slice);
-  return result.insertedId;
+    const db = getDBReference();
+    const collection = db.collection('slices');
+    const result = await collection.insertOne({
+      title: slice.title,
+      description: slice.description
+    });
+    return result.insertedId;
+
+    
 }
 exports.insertNewSlice = insertNewSlice;
 
@@ -69,18 +72,15 @@ exports.insertNewSlice = insertNewSlice;
  * information about the requested slice.  If no slice with the
  * specified ID exists, the returned Promise will resolve to null.
  */
-async function getSliceById(id) {
+async function getSliceByName(slicename) {
   const db = getDBReference();
   const collection = db.collection('slices');
-  if (!ObjectId.isValid(id)) {
-    return null;
-  } else {
-    const results = await collection
-      .find({ _id: new ObjectId(id) })
+  const results = await collection
+      .find({ "title": slicename })
       .toArray();
     return results[0];
-  }
 }
+exports.getSliceByName = getSliceByName;
 
 /*
  * Executes a DB query to fetch detailed information about a single
@@ -89,18 +89,18 @@ async function getSliceById(id) {
  * information about the requested slice.  If no slice with the
  * specified ID exists, the returned Promise will resolve to null.
  */
-async function getSliceDetailsById(id) {
+async function getSliceDetailsByName(id) {
   /*
    * Execute three sequential queries to get all of the info about the
    * specified slice, including its photos.
    */
-  const slice = await getSliceById(id);
+  const slice = await getSliceByName(id);
   if (slice) {
     slice.reviews = await getReviewsBySliceId(id);
   }
   return slice;
 }
-exports.getSliceDetailsById = getSliceDetailsById;
+exports.getSliceDetailsByName = getSliceDetailsByName;
 /*
  * Deletes a slice given its id
  */
