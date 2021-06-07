@@ -1,5 +1,6 @@
 
 const router = require('express').Router();
+const multer = require('multer');
 
 const { requireAuthentication } = require('../lib/auth');
 const { validateAgainstSchema } = require('../lib/validation');
@@ -39,6 +40,31 @@ router.get('/', async (req, res) => {
     res.status(500).send({
       error: "Error fetching slices list.  Please try again later."
     });
+  }
+});
+
+const {
+  PhotoSchema,
+  insertNewPhoto,
+  getPhotoById
+} = require('../models/photo');
+
+const acceptedFileTypes = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: `${__dirname}/uploads`,
+    filename: (req, file, callback) => {
+      const filename = crypto.pseudoRandomBytes(16).toString('hex');
+      const extension = acceptedFileTypes[file.mimetype];
+      callback(null, `${filename}.${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    callback(null, !!acceptedFileTypes[file.mimetype])
   }
 });
 
