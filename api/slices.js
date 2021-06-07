@@ -77,13 +77,21 @@ router.get('/', async (req, res) => {
 router.post('/:slicename', upload.single('image'), async (req, res) => {
   if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
     try {
+      const slicename = req.params.slicename;
+      const exists = await getSliceByName(slicename);
+      if (!exists) {
+        res.status(404).send({
+          error: "Slice not found"
+        })
+        return;
+      }
       const image = {
         contentType: req.file.mimetype,
         path: req.file.path,
         filename: req.file.filename,
         description: req.body.description,
         ownerid: req.body.ownerid,
-        slice: req.params.slicename
+        slice: slicename
       }
       const id = await insertNewPear(image);
       res.status(201).send({
