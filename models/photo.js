@@ -3,6 +3,17 @@ const { ObjectId, GridFSBucket } = require('mongodb');
 
 const { getDBReference } = require('../lib/mongo');
 
+const PhotoSchema = {
+  title: { required: true },
+  desciption: { required: false }
+};
+exports.PhotoSchema = PhotoSchema;
+
+
+
+
+
+
 exports.saveImageInfo = async function (image) {
   const db = getDBReference();
   const collection = db.collection('images');
