@@ -7,8 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "docker": "docker compose down && docker compose up -d --force-recreate",
-    "docker-init": "docker run -d --name pearscale-api --network pearscale -p \"27017:27017\" -v pearscale-vol:/data/db -e \"MONGO_INITDB_ROOT_USERNAME=peargod\" -e \"MONGO_INITDB_ROOT_PASSWORD=pear\" mongo:latest",
+    "docker-compose": "docker-compose down && docker-compose up -d --force-recreate",
+    "docker-workaround": "docker run -d --name pearscale-api --network pearscale -p \"27017:27017\" -v pearscale-vol:/data/db -e \"MONGO_INITDB_ROOT_USERNAME=peargod\" -e \"MONGO_INITDB_ROOT_PASSWORD=pear\" mongo:latest",
     "docker-shell": "docker run --rm -it --network pearscale mongo:latest mongo --host pearscale-api --username peargod --password pear --authenticationDatabase admin"
   },
   "repository": {
