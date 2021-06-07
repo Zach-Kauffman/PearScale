@@ -10,7 +10,7 @@ const ReviewSchema = {
   pearid: { required: true },
   text: { required: false },
   rating: { required: true },
-  ownerid: { required: true }
+  userid: { required: true }
 };
 exports.ReviewSchema = ReviewSchema;
 
@@ -33,11 +33,11 @@ exports.insertNewReview = insertNewReview;
  * specified user has already reviewed the specified business or false
  * otherwise.
  */
-async function hasUserReviewedPear(ownerid, pearid) {
+async function hasUserReviewedPear(userid, pearid) {
   const db = getDBReference();
   const collection = db.collection('reviews');
   const reviews = await collection
-    .find({'pearid': pearid, 'ownerid': ownerid})
+    .find({'pearid': pearid, 'userid': userid})
     .toArray();
   //Check if owner is in the list of reviews on a pair
   return (reviews.length > 0);
@@ -87,7 +87,7 @@ async function getReviewsByUserId(id) {
     return [];
   } else {
     const results = await collection
-      .find({ ownerid: new ObjectId(id) })
+      .find({ userid: new ObjectId(id) })
       .toArray();
     return results;
   }

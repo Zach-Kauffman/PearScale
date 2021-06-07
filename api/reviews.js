@@ -23,7 +23,7 @@ router.post('/',  async (req, res) => {
        * Make sure the user is not trying to review the same pear twice.
        * If they're not, then insert their review into the DB.
        */
-      const alreadyReviewed = await hasUserReviewedPear(req.body.ownerid, req.body.pearid);
+      const alreadyReviewed = await hasUserReviewedPear(req.body.userid, req.body.pearid);
       if (alreadyReviewed) {
         res.status(403).send({
           error: "This user has already posted a review of this pear"
@@ -85,7 +85,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
         const id = parseInt(req.params.id);
         const existingReview = await getReviewById(id);
         if (existingReview) {
-          if (req.body.pearid === existingReview.pearid && req.body.ownerid === existingReview.ownerid) {
+          if (req.body.pearid === existingReview.pearid && req.body.userid === existingReview.userid) {
             const updateSuccessful = await replaceReviewById(id, req.body);
             if (updateSuccessful) {
               res.status(200).send({
@@ -124,7 +124,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
  * Route to delete a review.
  */
 router.delete('/:id', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.ownerid || req.user.admin === 1) {
+  if (req.user.id == req.body.userid || req.user.admin === 1) {
     try {
       const deleteSuccessful = await deleteReviewById(parseInt(req.params.id));
       if (deleteSuccessful) {

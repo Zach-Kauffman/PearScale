@@ -92,7 +92,7 @@ router.post('/:slicename', upload.single('image'), async (req, res) => {
         filename: req.file.filename,
         title: req.body.title,
         description: req.body.description,
-        ownerid: req.body.ownerid,
+        userid: req.body.userid,
         slice: slicename
       }
       const id = await insertNewPear(image);
@@ -209,7 +209,7 @@ router.get('/:slicename/:pearid', async (req, res, next) => {
  * Route to replace data for a slice.
  */
 router.put('/:slicename', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.ownerid || req.user.admin === 1) {
+  if (req.user.id == req.body.userid || req.user.admin === 1) {
     if (validateAgainstSchema(req.body, SliceSchema)) {
       try {
         const id = parseInt(req.params.id)
@@ -246,7 +246,7 @@ router.put('/:slicename', requireAuthentication, async (req, res, next) => {
  * Route to delete a slice.
  */
 router.delete('/:id', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.ownerid || req.user.admin === 1) {
+  if (req.user.id == req.body.userid || req.user.admin === 1) {
     try {
       const deleteSuccessful = await deleteSliceById(parseInt(req.params.id));
       if (deleteSuccessful) {
