@@ -15,7 +15,8 @@ const {
 /*
  * Route to create a new review.
  */
-router.post('/', requireAuthentication, async (req, res) => {
+//TODO NEED REQUIRE AUTH
+router.post('/',  async (req, res) => {
   if (validateAgainstSchema(req.body, ReviewSchema)) {
     try {
       /*
@@ -25,7 +26,7 @@ router.post('/', requireAuthentication, async (req, res) => {
       const alreadyReviewed = await hasUserReviewedPear(req.body.userid, req.body.pearid);
       if (alreadyReviewed) {
         res.status(403).send({
-          error: "User has already posted a review of this pear"
+          error: "This user has already posted a review of this pear"
         });
       } else {
         const id = await insertNewReview(req.body);
@@ -84,7 +85,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
         const id = parseInt(req.params.id);
         const existingReview = await getReviewById(id);
         if (existingReview) {
-          if (req.body.pearid === existingReview.pearid && req.body.userid === existingReview.userid) {
+          if (req.body.pearid === existingReview.pearid && req.body.ownerid === existingReview.ownerid) {
             const updateSuccessful = await replaceReviewById(id, req.body);
             if (updateSuccessful) {
               res.status(200).send({
@@ -123,7 +124,7 @@ router.put('/:id', requireAuthentication, async (req, res, next) => {
  * Route to delete a review.
  */
 router.delete('/:id', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.userid || req.user.admin === 1) {
+  if (req.user.id == req.body.ownerid || req.user.admin === 1) {
     try {
       const deleteSuccessful = await deleteReviewById(parseInt(req.params.id));
       if (deleteSuccessful) {

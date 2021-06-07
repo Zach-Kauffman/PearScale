@@ -14,12 +14,15 @@ const {
   deleteSliceById,
   getSliceByName
 } = require('../models/slice');
+
+
 const { getUserById } = require('../models/user');
 
 const {
   PearSchema,
   insertNewPear,
-  getPearById
+  getPearById,
+  getPearsBySlicename
 } = require('../models/pear');
 
 const acceptedFileTypes = {
@@ -72,21 +75,30 @@ router.get('/', async (req, res) => {
 /*
  * Route to create a new pear.
  */
-router.post('/', upload.single('photo'), async (req, res) => {
+router.post('/:slicename', upload.single('image'), async (req, res) => {
   if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
     try {
+      const slicename = req.params.slicename;
+      const exists = await getSliceByName(slicename);
+      if (!exists) {
+        res.status(404).send({
+          error: "Slice not found"
+        })
+        return;
+      }
       const image = {
         contentType: req.file.mimetype,
         path: req.file.path,
         filename: req.file.filename,
-        slice: req.body.slice,
-        caption: req.body.caption,
+        description: req.body.description,
+        ownerid: req.body.ownerid,
+        slice: slicename
       }
       const id = await insertNewPear(image);
       res.status(201).send({
         id: id,
         links: {
-          pear: `/${sliceName}/pears/${id}`,
+          pear: `/${image.slice}/pears/${id}`,
         }
       });
     } catch (err) {
@@ -103,16 +115,15 @@ router.post('/', upload.single('photo'), async (req, res) => {
 });
 /*
  * Route to create a new slice.
- * TODO: ERROR IF SLICENAME ALREADY EXISTS
  */
-router.post('/:slicename', async (req, res) => {
+router.post('/', async (req, res) => {
   const slice = {
-    title: req.params.slicename,
+    title: (req.body) ? req.body.title : undefined,
     description: (req.body) ? (req.body.description) : undefined
   };
   if (validateAgainstSchema(slice, SliceSchema)) {
     try {
-      const id = await getSliceByName(slice.slicename);
+      const id = await getSliceByName(slice.title);
       if (id) {
         res.status(401).send({
           error: "This slice already exists."
@@ -121,7 +132,6 @@ router.post('/:slicename', async (req, res) => {
       } 
       const newSliceId = await insertNewSlice(slice)
       res.status(201).send({
-        id: newSliceId,
         links: {
           slicepage: `/slices/${slice.title}`,
         }
@@ -134,27 +144,57 @@ router.post('/:slicename', async (req, res) => {
     }
   } else {
     res.status(400).send({
-      error: "Request body is not a valid pear object."
+      error: "Request body is not a valid slice object."
     });
   }
 });
 /*
- * Route to fetch info about a specific slice.
+ * Route to fetch pears and 
+ * TODO: PAGMATION
  */
 router.get('/:slicename', async (req, res, next) => {
   try {
     const slicename = req.params.slicename
     const slice = await getSliceByName(slicename);
+    console.log("Slice:", slice);
+
     if (slice) {
-      //const pears = await getPearsBySlice(slicename)
+      const pears = await getPearsBySlicename(slicename);
+      console.log("pears:",pears);
       const response = {
         slice,
-        // todo: pears: { await getPearsBySlice() }
-        
+        pears: pears
       }
       res.status(200).send(response);
     } else {
       next();
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      error: "Unable to fetch slice.  Please try again later."
+    });
+  }
+});
+/*
+ * Route to fetch a singular pear and reviews
+ */
+router.get('/:slicename/:pearid', async (req, res, next) => {
+  try {
+    // Check if Slicename exists
+    const slicename = req.params.slicename
+    if (await getSliceByName(slicename)) {
+      // Check if pear exists
+      const pearid = req.params.pearid
+      const pears = await getPearById(pearid);
+      console.log("pears:", pears);
+      if (pears) {
+        res.status(200).send(pears);
+      } else {
+        res.status(404).send(`Pear with id '${pearid}' does not exist.`);
+      }
+    } else {
+      res.status(404).send(`Slice '${slicename}' does not exist.`);
     }
   } catch (err) {
     console.error(err);

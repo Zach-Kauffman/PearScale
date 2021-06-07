@@ -1,8 +1,5 @@
-/*
- * Pear schema and data accessor methods;
- */
-
-const { ObjectId } = require('mongodb');
+const fs = require('fs');
+const { ObjectId, GridFSBucket } = require('mongodb');
 
 const { getDBReference } = require('../lib/mongo');
 const { extractValidFields } = require('../lib/validation');
@@ -13,10 +10,8 @@ const { getReviewsByPearId } = require('./review');
  */
 const PearSchema = {
   title: { required: true },
-  image: { required: true },
   description: { required: false },
   ownerid: {required: true},
-  sliceid: {required: true}
 };
 exports.PearSchema = PearSchema;
 
@@ -59,11 +54,13 @@ exports.getPearsPage = getPearsPage;
  * Executes a DB query to insert a new pear into the database.  Returns
  * a Promise that resolves to the ID of the newly-created pear entry.
  */
-const insertNewPear = async (pear) => {
+const insertNewPear = async (pear) =>  new Promise((resolve, reject) => {
   const db = getDBReference();
   const bucket = new GridFSBucket(db, { bucketName: 'pears'});
   const metadata = {
     slice: pear.slice,
+    title: pear.title,
+    ownerid: pear.ownerid,
     contentType: pear.contentType,
     description: pear.description,
   }
@@ -75,7 +72,7 @@ const insertNewPear = async (pear) => {
       .on('finish', (result) => {
         resolve(result._id);
       });
-}
+});
 exports.insertNewPear = insertNewPear;
 
 /*
@@ -115,6 +112,20 @@ async function getAllPears() {
   }
 }
 exports.getAllPears = getAllPears;
+
+//Gets all pears attatched to slicename //TODOGregory
+async function getPearsBySlicename(slicename) {
+  const db = getDBReference();
+  // const collection = db.collection('images');
+  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
+  const results = await bucket
+    .find({ "metadata.slice": slicename })
+    .toArray();
+  return results;
+}
+exports.getPearsBySlicename = getPearsBySlicename;
+
+
 /*
  * Executes a DB query to fetch information about a single specified
  * pear based on its ID.  Does not fetch photo data for the
@@ -124,52 +135,19 @@ exports.getAllPears = getAllPears;
  */
 async function getPearById(id) {
   const db = getDBReference();
-  const collection = db.collection('pears');
+  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
   if (!ObjectId.isValid(id)) {
     return null;
   } else {
-    const results = await collection
-      .find({ _id: new ObjectId(id) })
-      .toArray();
-    return results[0];
+    const results = await bucket.find({ _id: new ObjectId(id) }).toArray();
+    return {
+      ...results[0],
+      reviews: await getReviewsByPearId(id),
+    }
   }
-}
-//Gets all pears attatched to slicename //TODOGregory
-async function getPearBySlicename(slice) {
-  const db = getDBReference();
-  const collection = db.collection('pears');
-  if (!ObjectId.isValid(id)) {
-    return null;
-  } else {
-    const results = await collection
-      .find({ "sliceid": slice })
-      .toArray();
-    return results[0];
-  }
-}
 
-/*
- * Executes a DB query to fetch detailed information about a single
- * specified pear based on its ID, including photo data for
- * the pear.  Returns a Promise that resolves to an object containing
- * information about the requested pear.  If no pear with the
- * specified ID exists, the returned Promise will resolve to null.
- */
-async function getPearWithReviews(id) {
-  const db = getDBReference();
-  const collection = db.collection('pears');
-  if (!ObjectId.isValid(id)) {
-    return null;
-  } else {
-    const results = await collection
-      .find({ _id: id})
-      .toArray();
-    return results[0];
-  }
 }
-exports.getPearWithReviews = getPearWithReviews;
-
-
+exports.getPearById = getPearById;
 /*
  * Deletes a pear given its id
  */

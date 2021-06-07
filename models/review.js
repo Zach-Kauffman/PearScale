@@ -26,6 +26,24 @@ async function insertNewReview(review) {
     return result.insertedId;
 }
 exports.insertNewReview = insertNewReview;
+
+/*
+ * Executes a MySQL query to verfy whether a given user has already reviewed
+ * a specified business.  Returns a Promise that resolves to true if the
+ * specified user has already reviewed the specified business or false
+ * otherwise.
+ */
+async function hasUserReviewedPear(ownerid, pearid) {
+  const db = getDBReference();
+  const collection = db.collection('reviews');
+  const reviews = await collection
+    .find({'pearid': pearid})
+    .toArray();
+  //Check if owner is in the list of reviews on a pair
+  const results = reviews.some(review => (review.ownerid === ownerid));
+  return (results) ? false : true;
+}
+exports.hasUserReviewedPear = hasUserReviewedPear;
 /*
  * Updates a pear
  */
@@ -49,16 +67,16 @@ exports.updateReview = updateReview;
  * given an id
  */
 async function getReviewsByPearId(id) {
-    const db = getDBReference();
-    const collection = db.collection('reviews');
-    if (!ObjectId.isValid(id)) {
-      return [];
-    } else {
-      const results = await collection
-        .find({ pearid: new ObjectId(id) })
-        .toArray();
-      return results;
-    }
+  const db = getDBReference();
+  const collection = db.collection('reviews');
+  if (!ObjectId.isValid(id)) {
+    return [];
+  } else {
+    const results = await collection
+      .find({ pearid: new ObjectId(id) })
+      .toArray();
+    return results;
+  }
 }
 exports.getReviewsByPearId = getReviewsByPearId;
 
