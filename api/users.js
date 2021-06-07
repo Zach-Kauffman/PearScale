@@ -8,17 +8,60 @@ const {
   UserSchema,
   insertNewUser,
   getUserById,
-  validateUserByEmail
+  validateUser,
+  validateUserByEmail,
+  getUserByEmail
+
 } = require('../models/user');
 const { validateAgainstSchema } = require('../lib/validation');
+
+router.get('/:id', requireAuthentication, async (req, res, next) => {
+  if(!req.user.admin) {
+    if (req.user.id != req.params.id) {
+      res.status(403).send({
+        error: "Unauthorized to access the specified resource"
+      });
+    }
+    else {
+      try {
+        const user = await getUserById(req.params.id);
+        if (user) {
+          res.status(200).send({
+            _id: user[0]._id,
+            email: user[0].email,
+            name: user[0].name
+          });
+        } else {
+          next();
+        }
+      } catch (err) {
+        console.error("  -- Error:", err);
+        res.status(500).send({
+          error: "Error fetching user.  Try again later."
+        });
+      }
+    }
+  } else {
+    //if user is an admin then just send the requested user
+    const user = await getUserById(req.params.id);
+    if(user) {
+      res.status(200).send(user);
+    } else {
+      next();
+    }
+  }
+});
+
 
 router.post('/login', async (req, res) => {
   if (req.body && req.body.email && req.body.password) {
     try {
       const authenticated = await validateUserByEmail(req.body.email, req.body.password);
       if (authenticated) {
+        const userid = await getUserByEmail(req.body.email);
         res.status(200).send({
-          token: generateAuthToken(authenticated)
+          token: generateAuthToken(authenticated),
+          id: userid[0]._id
         });
       } else {
         res.status(401).send({
@@ -37,20 +80,28 @@ router.post('/login', async (req, res) => {
       error: "Request body needs `id` and `password`."});
   }
 });
-//Absolutly terrible funciton
-router.post('/', async (req, res) => {
-  console.log(req.body);
+
+//Absolutely terrible funciton
+router.post('/', async (req, res, next) => {  
   //if admin check admin
   if (req.body.admin == true) {
+
     requireAuthentication(req, res, async () => {
       //If user is admin then do it
-      if (req.user.admin == 1) {
+      if (req.user.admin == true) {
         if (validateAgainstSchema(req.body, UserSchema)) {
           try {
             const id = await insertNewUser(req.body);
-            res.status(201).send({
-              _id: id
-            });
+            //id returns as false if a user already exists with given email
+            if (!id) {
+              res.status(401).send({
+                error: "A user with that email already exists. Please use a different email"
+              });
+            } else {
+              res.status(201).send({
+                _id: id
+              });
+            }
           } catch (err) {
             console.error("  -- Error:", err);
             res.status(500).send({
@@ -71,14 +122,23 @@ router.post('/', async (req, res) => {
       }
     })
   }
+
   //Else not trying to make admin
   else {
     if (validateAgainstSchema(req.body, UserSchema)) {
       try {
         const id = await insertNewUser(req.body);
-        res.status(201).send({
-          _id: id
-        });
+        //id returns as false if a user already exists with given email
+        if (!id) {
+          res.status(401).send({
+            error: "A user with that email already exists. Please use a different email"
+          });
+        } else {
+          res.status(201).send({
+            _id: id
+          });
+        }
+        
       } catch (err) {
         console.error("  -- Error:", err);
         res.status(500).send({
@@ -88,33 +148,6 @@ router.post('/', async (req, res) => {
     } else {
       res.status(400).send({
         error: "Request body does not contain a valid User."
-      });
-    }
-  }
-
-});
-
-
-router.get('/:id', requireAuthentication, async (req, res, next) => {
-  console.log(req.user);
-  if (req.user.id != req.params.id && req.user.admin !== 1) {
-    res.status(403).send({
-      error: "Unauthorized to access the specified resource"
-    });
-  }
-  else {
-    try {
-      const user = await getUserById(req.params.id);
-      delete user.password;
-      if (user) {
-        res.status(200).send(user);
-      } else {
-        next();
-      }
-    } catch (err) {
-      console.error("  -- Error:", err);
-      res.status(500).send({
-        error: "Error fetching user.  Try again later."
       });
     }
   }
