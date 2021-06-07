@@ -18,7 +18,7 @@ async function insertNewUser(user) {
   const collection = db.collection('users');
   const duplicate = await collection.find({email: user.email}).toArray();
   if (duplicate.length > 0) {
-    return {err: "There is already a user with that email. Please use a new email."}
+    return false
   }
   const results = await collection.insertOne(user);
   return results.insertedId;
@@ -45,9 +45,22 @@ async function validateUserByEmail(email, password) {
   const results = await collection
     .find({email: email, password: password})
     .toArray();
+  if (results.length == 0) {
+    return false;
+  }
   return results;
 }
 exports.validateUserByEmail = validateUserByEmail;
+
+async function getUserByEmail(email) {
+  const db = getDBReference();
+  const collection = db.collection('users');
+  const results = await collection
+  .find({ email: email })
+  .toArray();
+  return results;
+}
+exports.getUserByEmail = getUserByEmail;
 
 async function getUserById(id) {
     const db = getDBReference();
@@ -56,7 +69,7 @@ async function getUserById(id) {
         return [];
     } else {
         const results = await collection
-        .find({ pearid: new ObjectId(id) })
+        .find({ _id: new ObjectId(id) })
         .toArray();
         return results;
     }
