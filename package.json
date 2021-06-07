@@ -1,13 +1,15 @@
 {
   "name": "pearscale-api",
-  "version": "2.0",
+  "version": "2.0.0",
   "description": "A social media platform for pear lovers",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "NODE_ENV=development nodemon server.js",
-    "docker": "docker-compose down && docker-compose up -d --force-recreate"
+    "dev": "nodemon server.js",
+    "docker-compose": "docker-compose down && docker-compose up -d --force-recreate",
+    "docker-workaround": "docker run -d --name pearscale-api --network pearscale -p \"27017:27017\" -v pearscale-vol:/data/db -e \"MONGO_INITDB_ROOT_USERNAME=peargod\" -e \"MONGO_INITDB_ROOT_PASSWORD=pear\" mongo:latest",
+    "docker-shell": "docker run --rm -it --network pearscale mongo:latest mongo --host pearscale-api --username peargod --password pear --authenticationDatabase admin"
   },
   "repository": {
     "type": "git",

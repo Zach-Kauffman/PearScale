@@ -40,6 +40,7 @@ router.post('/login', async (req, res) => {
 });
 //Absolutly terrible funciton
 router.post('/', async (req, res) => {
+  console.log("shit's fucked", req.body);
   //if admin check admin
   if (req.body.admin == true) {
     requireAuthentication(req, res, async () => {
