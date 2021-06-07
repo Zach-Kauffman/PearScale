@@ -157,13 +157,18 @@ router.post('/', async (req, res, next) => {
  * Route to list all of a user's pears.
  */
 router.get('/:id/pears', requireAuthentication, async (req, res, next) => {
-    if (req.user.id == req.body.id || req.user.admin === 1) {
+    if (req.user.id == req.params.id || req.user.admin == true) {
       try {
-        const pears = await getPearsByUserId(parseInt(req.params.id));
-        if (pears) {
-          res.status(200).send({ pears: pears });
+        const pears = await getPearsByUserId(req.params.id);
+        const user = await getUserById(req.params.id);
+        if(user.length === 0) {
+          res.status(404).send({error: "User not found"});
         } else {
-          next();
+          if (pears) {
+            res.status(200).send({ pears: pears });
+          } else {
+            next();
+          }
         }
       } catch (err) {
         console.error(err);
@@ -179,7 +184,6 @@ router.get('/:id/pears', requireAuthentication, async (req, res, next) => {
     }
   });
   
-  module.exports = router;
 /*
  * Route to list all of a user's reviews.
  */
@@ -206,3 +210,4 @@ router.get('/:id/reviews', requireAuthentication, async (req, res, next) => {
   }
 });
 
+module.exports = router;

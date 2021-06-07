@@ -125,6 +125,18 @@ async function getPearsBySlicename(slicename) {
 }
 exports.getPearsBySlicename = getPearsBySlicename;
 
+//Gets all pears attatched to slicename //TODOGregory
+async function getPearsByUserId(id) {
+  const db = getDBReference();
+  const collection = db.collection('pears.files')
+  const bucket = new GridFSBucket(db, { bucketName: 'pears.files' });
+  const results = await collection
+    .find({ "metadata.ownerid": id })
+    .toArray();
+  return results;
+}
+exports.getPearsByUserId = getPearsByUserId;
+
 
 /*
  * Executes a DB query to fetch information about a single specified

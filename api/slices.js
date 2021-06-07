@@ -90,6 +90,7 @@ router.post('/:slicename', upload.single('image'), async (req, res) => {
         contentType: req.file.mimetype,
         path: req.file.path,
         filename: req.file.filename,
+        title: req.body.title,
         description: req.body.description,
         ownerid: req.body.ownerid,
         slice: slicename

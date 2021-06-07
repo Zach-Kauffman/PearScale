@@ -23,7 +23,7 @@ router.post('/',  async (req, res) => {
        * Make sure the user is not trying to review the same pear twice.
        * If they're not, then insert their review into the DB.
        */
-      const alreadyReviewed = await hasUserReviewedPear(req.body.userid, req.body.pearid);
+      const alreadyReviewed = await hasUserReviewedPear(req.body.ownerid, req.body.pearid);
       if (alreadyReviewed) {
         res.status(403).send({
           error: "This user has already posted a review of this pear"
