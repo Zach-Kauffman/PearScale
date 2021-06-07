@@ -112,26 +112,6 @@ async function getAllPears() {
   }
 }
 exports.getAllPears = getAllPears;
-/*
- * Executes a DB query to fetch information about a single specified
- * pear based on its ID.  Does not fetch photo data for the
- * pear.  Returns a Promise that resolves to an object containing
- * information about the requested pear.  If no pear with the
- * specified ID exists, the returned Promise will resolve to null.
- */
-async function getPearById(id) {
-  const db = getDBReference();
-  const collection = db.collection('pears');
-  if (!ObjectId.isValid(id)) {
-    return null;
-  } else {
-    const results = await collection
-      .find({ _id: new ObjectId(id) })
-      .toArray();
-    return results[0];
-  }
-}
-exports.getPearById = getPearById;
 
 //Gets all pears attatched to slicename //TODOGregory
 async function getPearsBySlicename(slicename) {
@@ -145,28 +125,29 @@ async function getPearsBySlicename(slicename) {
 }
 exports.getPearsBySlicename = getPearsBySlicename;
 
+
 /*
- * Executes a DB query to fetch detailed information about a single
- * specified pear based on its ID, including photo data for
- * the pear.  Returns a Promise that resolves to an object containing
+ * Executes a DB query to fetch information about a single specified
+ * pear based on its ID.  Does not fetch photo data for the
+ * pear.  Returns a Promise that resolves to an object containing
  * information about the requested pear.  If no pear with the
  * specified ID exists, the returned Promise will resolve to null.
  */
-async function getPearWithReviews(id) {
+async function getPearById(id) {
   const db = getDBReference();
-  const collection = db.collection('pears');
+  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
   if (!ObjectId.isValid(id)) {
     return null;
   } else {
-    const results = await collection
-      .find({ _id: id})
-      .toArray();
-    return results[0];
+    const results = await bucket.find({ _id: new ObjectId(id) }).toArray();
+    return {
+      ...results[0],
+      reviews: await getReviewsByPearId(id),
+    }
   }
+
 }
-exports.getPearWithReviews = getPearWithReviews;
-
-
+exports.getPearById = getPearById;
 /*
  * Deletes a pear given its id
  */

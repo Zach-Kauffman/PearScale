@@ -14,15 +14,14 @@ const {
   getSliceByName
 } = require('../models/slice');
 
-const {
-  getPearsBySlicename
-} = require('../models/pear');
+
 const { getUserById } = require('../models/user');
 
 const {
   PearSchema,
   insertNewPear,
-  getPearById
+  getPearById,
+  getPearsBySlicename
 } = require('../models/pear');
 
 const acceptedFileTypes = {
@@ -160,6 +159,33 @@ router.get('/:slicename', async (req, res, next) => {
       res.status(200).send(response);
     } else {
       next();
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      error: "Unable to fetch slice.  Please try again later."
+    });
+  }
+});
+/*
+ * Route to fetch a singular pear and reviews
+ */
+router.get('/:slicename/:pearid', async (req, res, next) => {
+  try {
+    // Check if Slicename exists
+    const slicename = req.params.slicename
+    if (await getSliceByName(slicename)) {
+      // Check if pear exists
+      const pearid = req.params.pearid
+      const pears = await getPearById(pearid);
+      console.log("pears:", pears);
+      if (pears) {
+        res.status(200).send(pears);
+      } else {
+        res.status(404).send(`Pear with id '${pearid}' does not exist.`);
+      }
+    } else {
+      res.status(404).send(`Slice '${slicename}' does not exist.`);
     }
   } catch (err) {
     console.error(err);

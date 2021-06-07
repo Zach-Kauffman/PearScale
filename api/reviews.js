@@ -15,7 +15,8 @@ const {
 /*
  * Route to create a new review.
  */
-router.post('/', requireAuthentication, async (req, res) => {
+//TODO NEED REQUIRE AUTH
+router.post('/',  async (req, res) => {
   if (validateAgainstSchema(req.body, ReviewSchema)) {
     try {
       /*
