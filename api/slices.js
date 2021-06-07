@@ -11,10 +11,34 @@ const {
   getSliceDetailsById,
   replaceSliceById,
   deleteSliceById,
-  getSlicesByOwnerdId
+  getSliceByName
 } = require('../models/slice');
 const { getUserById } = require('../models/user');
 
+const {
+  PearSchema,
+  insertNewPear,
+  getPearById
+} = require('../models/pear');
+
+const acceptedFileTypes = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: `${__dirname}/uploads`,
+    filename: (req, file, callback) => {
+      const filename = crypto.pseudoRandomBytes(16).toString('hex');
+      const extension = acceptedFileTypes[file.mimetype];
+      callback(null, `${filename}.${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    callback(null, !!acceptedFileTypes[file.mimetype])
+  }
+});
 /*
  * Route to return a paginated list of slices.
  */
@@ -43,55 +67,25 @@ router.get('/', async (req, res) => {
   }
 });
 
-const {
-  PhotoSchema,
-  insertNewPhoto,
-  getPhotoById
-} = require('../models/image');
-
-const acceptedFileTypes = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png'
-}
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: `${__dirname}/uploads`,
-    filename: (req, file, callback) => {
-      const filename = crypto.pseudoRandomBytes(16).toString('hex');
-      const extension = acceptedFileTypes[file.mimetype];
-      callback(null, `${filename}.${extension}`);
-    }
-  }),
-  fileFilter: (req, file, callback) => {
-    callback(null, !!acceptedFileTypes[file.mimetype])
-  }
-});
 
 /*
- * Route to create a new photo.
+ * Route to create a new pear.
  */
-router.post('/:slicename', upload.single('photo'), async (req, res) => {
-  console.log("== req.body:", req.body);
-  console.log("== req.file:", req.file);
-  if (validateAgainstSchema(req.body, PhotoSchema) && req.file && req.body) {
+router.post('/', upload.single('photo'), async (req, res) => {
+  if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
     try {
       const image = {
         contentType: req.file.mimetype,
-        description: req.body.description,
-        filename: req.file.filename,
-        slice: req.params.slicename,
         path: req.file.path,
+        filename: req.file.filename,
+        slice: req.body.slice,
+        caption: req.body.caption,
       }
-      const id = await insertNewPhoto(image);
-      await fs.unlink(req.file.path);
-      const channel = getChannel();
-      channel.sendToQueue('photos', Buffer.from(id.toString()));
+      const id = await insertNewPear(image);
       res.status(201).send({
         id: id,
         links: {
-          photo: `/photos/${id}`,
-          business: `/businesses/${req.body.businessid}`
+          pear: `/${sliceName}/pears/${id}`,
         }
       });
     } catch (err) {
@@ -102,19 +96,62 @@ router.post('/:slicename', upload.single('photo'), async (req, res) => {
     }
   } else {
     res.status(400).send({
-      error: "Request body is not a valid photo object"
+      error: "Request body is not a valid pear object."
     });
   }
 });
-
+/*
+ * Route to create a new slice.
+ * TODO: ERROR IF SLICENAME ALREADY EXISTS
+ */
+router.post('/:slicename', async (req, res) => {
+  const slice = {
+    title: req.params.slicename,
+    description: (req.body) ? (req.body.description) : undefined
+  };
+  if (validateAgainstSchema(slice, SliceSchema)) {
+    try {
+      const id = await getSliceByName(slice.slicename);
+      if (id) {
+        res.status(401).send({
+          error: "This slice already exists."
+        })
+        return;
+      } 
+      const newSliceId = await insertNewSlice(slice)
+      res.status(201).send({
+        id: newSliceId,
+        links: {
+          slicepage: `/slices/${slice.title}`,
+        }
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
+        error: "Error inserting photo into DB.  Please try again later."
+      });
+    }
+  } else {
+    res.status(400).send({
+      error: "Request body is not a valid pear object."
+    });
+  }
+});
 /*
  * Route to fetch info about a specific slice.
  */
 router.get('/:slicename', async (req, res, next) => {
   try {
-    const slice = await getSliceDetailsById(parseInt(req.params.id));
+    const slicename = req.params.slicename
+    const slice = await getSliceByName(slicename);
     if (slice) {
-      res.status(200).send(slice);
+      //const pears = await getPearsBySlice(slicename)
+      const response = {
+        slice,
+        // todo: pears: { await getPearsBySlice() }
+        
+      }
+      res.status(200).send(response);
     } else {
       next();
     }
