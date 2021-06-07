@@ -1,3 +1,12 @@
+db.createUser({
+  user:"peargod",
+  pwd:"pear",
+  roles:[{
+    role:"readWrite",
+    db:"pears"
+  }]
+})
+
 db.pears.insertMany([
   {
     "name": "Block 15",

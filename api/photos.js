@@ -34,8 +34,8 @@ const upload = multer({
  * Route to create a new photo.
  */
 router.post('/', upload.single('photo'), async (req, res) => {
-  //console.log("== req.body:", req.body);
-  //console.log("== req.file:", req.file);
+  console.log("== req.body:", req.body);
+  console.log("== req.file:", req.file);
   if (validateAgainstSchema(req.body, PhotoSchema) && req.file && req.body) {
     try {
       const image = {
@@ -44,14 +44,13 @@ router.post('/', upload.single('photo'), async (req, res) => {
         filename: req.file.filename,
         businessid: req.body.businessid,
         path: req.file.path,
-        
       }
       const id = await insertNewPhoto(image);
       res.status(201).send({
         id: id,
         links: {
           photo: `/photos/${id}`,
-          business: `/businesses/${req.body.businessid}`
+          pears: `/pears/${req.body.businessid}`
         }
       });
     } catch (err) {
