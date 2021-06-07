@@ -13,6 +13,32 @@ const {
 } = require('../models/user');
 const { validateAgainstSchema } = require('../lib/validation');
 
+router.get('/:id', requireAuthentication, async (req, res, next) => {
+  console.log("swag");
+  if (req.user.id != req.params.id && req.user.admin !== 1) {
+    res.status(403).send({
+      error: "Unauthorized to access the specified resource"
+    });
+  }
+  else {
+    try {
+      const user = await getUserById(req.params.id);
+      delete user.password;
+      if (user) {
+        res.status(200).send(user);
+      } else {
+        next();
+      }
+    } catch (err) {
+      console.error("  -- Error:", err);
+      res.status(500).send({
+        error: "Error fetching user.  Try again later."
+      });
+    }
+  }
+});
+
+
 router.post('/login', async (req, res) => {
   if (req.body && req.body.email && req.body.password) {
     try {
@@ -38,9 +64,10 @@ router.post('/login', async (req, res) => {
       error: "Request body needs `id` and `password`."});
   }
 });
+
 //Absolutly terrible funciton
-router.post('/', async (req, res) => {
-  console.log("shit's fucked", req.body);
+router.post('/', async (req, res) => {  
+  
   //if admin check admin
   if (req.body.admin == true) {
     requireAuthentication(req, res, async () => {
@@ -95,30 +122,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.get('/:id', requireAuthentication, async (req, res, next) => {
-  console.log(req.user);
-  if (req.user.id != req.params.id && req.user.admin !== 1) {
-    res.status(403).send({
-      error: "Unauthorized to access the specified resource"
-    });
-  }
-  else {
-    try {
-      const user = await getUserById(req.params.id);
-      delete user.password;
-      if (user) {
-        res.status(200).send(user);
-      } else {
-        next();
-      }
-    } catch (err) {
-      console.error("  -- Error:", err);
-      res.status(500).send({
-        error: "Error fetching user.  Try again later."
-      });
-    }
-  }
-});
+
 
 /*
  * Route to list all of a user's pears.

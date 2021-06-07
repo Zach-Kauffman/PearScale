@@ -8,8 +8,22 @@ const { extractValidFields } = require('../lib/validation');
  */
 const UserSchema = {
   name: { required: true },
+  email: {required: true },
+  password: { required: true }
 };
 exports.UserSchema = UserSchema;
+
+async function insertNewUser(user) {
+  const db = getDBReference();
+  const collection = db.collection('users');
+  const duplicate = await collection.find({email: user.email}).toArray();
+  if (duplicate.length > 0) {
+    return {err: "There is already a user with that email. Please use a new email."}
+  }
+  const results = await collection.insertOne(user);
+  return results.insertedId;
+}
+exports.insertNewUser = insertNewUser;
 
 async function getAllUsers(id) {
     const db = getDBReference();
@@ -24,6 +38,16 @@ async function getAllUsers(id) {
     }
 }
 exports.getAllUsers = getAllUsers;
+
+async function validateUserByEmail(email, password) {
+  const db = getDBReference();
+  const collection = db.collection('users');
+  const results = await collection
+    .find({email: email, password: password})
+    .toArray();
+  return results;
+}
+exports.validateUserByEmail = validateUserByEmail;
 
 async function getUserById(id) {
     const db = getDBReference();
