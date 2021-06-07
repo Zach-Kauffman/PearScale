@@ -1,27 +1,29 @@
 {
-  "name": "master-assignment-4",
-  "version": "1.2.0",
-  "description": "A small business review API",
+  "name": "pearscale-api",
+  "version": "2.0",
+  "description": "A social media platform for pear lovers",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "NODE_ENV=development nodemon server.js"
+    "dev": "NODE_ENV=development nodemon server.js",
+    "docker": "docker-compose down && docker-compose up -d --force-recreate"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/osu-cs493-sp21/master-assignment-4.git"
+    "url": "https://github.com/osu-cs493-sp21/final-project-cs493-group16"
   },
-  "author": "Hess <hessro@oregonstate.edu>",
+  "authors": {
+    "1": "Zach Kauffman -- github.com/zach-kauffman",
+    "2": "David Kalcic",
+    "3": "Gregory Blood"
+  },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/osu-cs493-sp21/master-assignment-4/issues"
-  },
-  "homepage": "https://github.com/osu-cs493-sp21/master-assignment-4#readme",
   "dependencies": {
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "fs": "*",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.6",
     "morgan": "^1.10.0",
     "multer": "^1.4.2"

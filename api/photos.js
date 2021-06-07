@@ -1,23 +1,52 @@
-/*
- * API sub-router for businesses collection endpoints.
- */
-
+const multer = require('multer');
+const crypto = require('crypto');
 const router = require('express').Router();
+const fs = require('fs/promises');
 
 const { validateAgainstSchema } = require('../lib/validation');
+
 const {
   PhotoSchema,
   insertNewPhoto,
   getPhotoById
 } = require('../models/photo');
 
+const acceptedFileTypes = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: `${__dirname}/uploads`,
+    filename: (req, file, callback) => {
+      const filename = crypto.pseudoRandomBytes(16).toString('hex');
+      const extension = acceptedFileTypes[file.mimetype];
+      callback(null, `${filename}.${extension}`);
+    }
+  }),
+  fileFilter: (req, file, callback) => {
+    callback(null, !!acceptedFileTypes[file.mimetype])
+  }
+});
+
 /*
  * Route to create a new photo.
  */
-router.post('/', async (req, res) => {
-  if (validateAgainstSchema(req.body, PhotoSchema)) {
+router.post('/', upload.single('photo'), async (req, res) => {
+  //console.log("== req.body:", req.body);
+  //console.log("== req.file:", req.file);
+  if (validateAgainstSchema(req.body, PhotoSchema) && req.file && req.body) {
     try {
-      const id = await insertNewPhoto(req.body);
+      const image = {
+        contentType: req.file.mimetype,
+        caption: req.body.caption,
+        filename: req.file.filename,
+        businessid: req.body.businessid,
+        path: req.file.path,
+        
+      }
+      const id = await insertNewPhoto(image);
       res.status(201).send({
         id: id,
         links: {
@@ -38,23 +67,5 @@ router.post('/', async (req, res) => {
   }
 });
 
-/*
- * Route to fetch info about a specific photo.
- */
-router.get('/:id', async (req, res, next) => {
-  try {
-    const photo = await getPhotoById(req.params.id);
-    if (photo) {
-      res.status(200).send(photo);
-    } else {
-      next();
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      error: "Unable to fetch photo.  Please try again later."
-    });
-  }
-});
 
 module.exports = router;

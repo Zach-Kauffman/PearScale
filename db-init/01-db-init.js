@@ -1,4 +1,4 @@
-db.businesses.insertMany([
+db.pears.insertMany([
   {
     "name": "Block 15",
     "address": "300 SW Jefferson Ave.",

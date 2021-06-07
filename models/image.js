@@ -18,7 +18,6 @@ exports.saveImageFile = function (image) {
       contentType: image.contentType,
       userId: image.userId
     };
-
     const uploadStream = bucket.openUploadStream(
       image.filename,
       { metadata: metadata }
@@ -44,14 +43,12 @@ exports.getImageDownloadStreamByFilename = function(filename) {
 
 exports.getImageInfoById = async function (id) {
   const db = getDBReference();
-  // const collection = db.collection('images');
   const bucket = new GridFSBucket(db, { bucketName: 'images' });
 
   if (!ObjectId.isValid(id)) {
     return null;
   } else {
-    // const results = await collection.find({ _id: new ObjectId(id) })
-    //   .toArray();
+
     const results = await bucket.find({ _id: new ObjectId(id) })
       .toArray();
     return results[0];

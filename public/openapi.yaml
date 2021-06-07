@@ -1,23 +1,23 @@
 openapi: 3.0.2
 info:
   version: 1.0.0
-  title: Businesses API
+  title: Pears API
   description: A simple API for a Yelp-like application.
 
 paths:
-  /businesses:
+  /pears:
     get:
-      summary: Fetch a list of businesses
+      summary: Fetch a list of pears
       description: >
-        Returns a paginated list of businesses.
-      operationId: getBusinessesPage
+        Returns a paginated list of pears.
+      operationId: getPearsPage
       tags:
-        - Businesses
+        - Pears
       parameters:
         - name: page
           in: query
           description: >
-            Specifies a specific page of businesses to request.
+            Specifies a specific page of pears to request.
           schema:
             type: integer
             minimum: 1
@@ -32,7 +32,7 @@ paths:
                 properties:
                   pageNumber:
                     type: integer
-                    description: Page number of returned businesses.
+                    description: Page number of returned pears.
                     example: 1
                   totalPages:
                     type: integer
@@ -40,34 +40,34 @@ paths:
                     example: 127
                   pageSize:
                     type: integer
-                    description: Number of businesses per page.
+                    description: Number of pears per page.
                     example: 10
                   totalCount:
                     type: integer
-                    description: Total number of businesses.
+                    description: Total number of pears.
                     example: 1264
                   lodgings:
                     type: array
-                    description: The returned businesses.
+                    description: The returned pears.
                     items:
-                      $ref: '#/components/schemas/Business'
+                      $ref: '#/components/schemas/Pear'
     post:
-      summary: Add a new business
+      summary: Add a new pear
       description: >
-        Creates a new business with specified data and adds it to the
+        Creates a new pear with specified data and adds it to the
         application's database.
-      operationId: addBusiness
+      operationId: addPear
       tags:
-        - Businesses
+        - Pears
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Business'
+              $ref: '#/components/schemas/Pear'
       responses:
         '201':
-          description: New business successfully added
+          description: New pear successfully added
           content:
             application/json:
               schema:
@@ -75,7 +75,7 @@ paths:
                 properties:
                   id:
                     type: integer
-                    description: Unique ID of the created business.
+                    description: Unique ID of the created pear.
                     example: 19
         '400':
           description: >
@@ -86,31 +86,31 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-  '/businesses/{businessid}':
+  '/pears/{pearid}':
     parameters:
-      - name: businessid
+      - name: pearid
         in: path
-        description: Unique ID of a business.
+        description: Unique ID of a pear.
         required: true
         schema:
           type: string
           example: 5ce48a2ddf60d448aed2b1d5
     get:
-      summary: Fetch data for a specific business.
+      summary: Fetch data for a specific pear.
       description: >
-        Returns complete data for a the business specified by `businessid`.
-      operationId: getBusinessById
+        Returns complete data for a the pear specified by `pearid`.
+      operationId: getPearById
       tags:
-        - Businesses
+        - Pears
       responses:
         '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Business'
+                $ref: '#/components/schemas/Pear'
         '404':
-          description: Specified `businessid` not found.
+          description: Specified `pearid` not found.
           content:
             application/json:
               schema:
@@ -232,60 +232,60 @@ paths:
 
 components:
   schemas:
-    Business:
+    Pear:
       description: >
-        An object representing information about a single business.
+        An object representing information about a single pear.
       type: object
       properties:
         name:
           type: string
-          description: Name of the business.
+          description: Name of the pear.
           example: American Dream Pizza
         address:
           type: object
           properties:
             street:
               type: string
-              description: Street address of the business.
+              description: Street address of the pear.
               example: 2525 NW Monroe Ave.
             city:
               type: string
-              description: The city in which the business resides.
+              description: The city in which the pear resides.
               example: Corvallis
             state:
               type: string
-              description: The state in which the business resides.
+              description: The state in which the pear resides.
               example: OR
             zip:
               type: string
               description: >
-                The zip code of the city in which the business resides.
+                The zip code of the city in which the pear resides.
               example: '97330'
         phone:
           type: string
-          description: The business' phone number.
+          description: The pear' phone number.
           example: '541-757-1713'
         category:
           type: string
-          description: The business' category.
+          description: The pear' category.
           example: 'Restaurant'
         subcategory:
           type: string
-          description: The business' subcategory.
+          description: The pear' subcategory.
           example: 'Pizza'
         website:
           type: string
-          description: The business' website URL.
+          description: The pear' website URL.
           example: 'http://adpizza.com'
         email:
           type: string
-          description: The business' email address.
+          description: The pear' email address.
           example: 'brian@adpizza.com'
         photos:
           type: array
           description: >
-            An array of photos of the business.  These are only returned when
-            fetching detailed information about a business.
+            An array of photos of the pear.  These are only returned when
+            fetching detailed information about a pear.
           items:
             $ref: '#/components/schemas/Photo'
       required:
@@ -297,13 +297,13 @@ components:
 
     Photo:
       description: >
-        An object representing information about a photo of a business.
+        An object representing information about a photo of a pear.
       type: object
       properties:
-        businessid:
+        pearid:
           type: string
           description: >
-            The ID of the business associated with this photo.  This is
+            The ID of the pear associated with this photo.  This is
             required when creating a photo.
           example: 5ce48a2ddf60d448aed2b1d5
         caption:
@@ -332,7 +332,7 @@ components:
             '128': /media/photos/5ce48a2ddf60d448aed2b1c3-128.jpg
             'orig': /media/photos/5ce48a2ddf60d448aed2b1c3-orig.jpg
       required:
-        - businessid
+        - pearid
         - file
 
     Error:
@@ -347,9 +347,9 @@ tags:
   - name: NewStuff
     description: >
       New things to implement for this assignment.
-  - name: Businesses
+  - name: Pears
     description: >
-      API endpoints related to business resources.
+      API endpoints related to pear resources.
   - name: Photos
     description: >
       API endpoints related to photo resources.
