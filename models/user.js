@@ -8,18 +8,24 @@ const { extractValidFields } = require('../lib/validation');
  */
 const UserSchema = {
   name: { required: true },
-  email: { required: true },
-  password: { required: true },
+  email: {required: true },
+  password: { required: true }
+
 };
 exports.UserSchema = UserSchema;
 
 async function insertNewUser(user) {
   const db = getDBReference();
   const collection = db.collection('users');
-  const result = collection.insertOne(user);
-  return result;
+  const duplicate = await collection.find({email: user.email}).toArray();
+  if (duplicate.length > 0) {
+    return false
+  }
+  const results = await collection.insertOne(user);
+  return results.insertedId;
 }
 exports.insertNewUser = insertNewUser;
+
 async function getAllUsers(id) {
     const db = getDBReference();
     const collection = db.collection('users');
@@ -34,6 +40,29 @@ async function getAllUsers(id) {
 }
 exports.getAllUsers = getAllUsers;
 
+async function validateUserByEmail(email, password) {
+  const db = getDBReference();
+  const collection = db.collection('users');
+  const results = await collection
+    .find({email: email, password: password})
+    .toArray();
+  if (results.length == 0) {
+    return false;
+  }
+  return results;
+}
+exports.validateUserByEmail = validateUserByEmail;
+
+async function getUserByEmail(email) {
+  const db = getDBReference();
+  const collection = db.collection('users');
+  const results = await collection
+  .find({ email: email })
+  .toArray();
+  return results;
+}
+exports.getUserByEmail = getUserByEmail;
+
 async function getUserById(id) {
     const db = getDBReference();
     const collection = db.collection('users');
@@ -41,7 +70,7 @@ async function getUserById(id) {
         return [];
     } else {
         const results = await collection
-        .find({ pearid: new ObjectId(id) })
+        .find({ _id: new ObjectId(id) })
         .toArray();
         return results;
     }
