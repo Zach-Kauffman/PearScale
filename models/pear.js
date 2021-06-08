@@ -11,7 +11,7 @@ const { getReviewsByPearId } = require('./review');
 const PearSchema = {
   title: { required: true },
   description: { required: false },
-  userid: {required: true},
+  userid: { required: false }
 };
 exports.PearSchema = PearSchema;
 

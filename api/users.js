@@ -253,17 +253,16 @@ router.patch('/:id', requireAuthentication, async (req, res, next) => {
           }
 
           //if email doesn't already exist, we can update the user
-          else {
-            const result = await updateUser(req.body, req.params.id);
-            if(result) {
-              res.status(204).send();
-            } else {
-              //update fails if there's no changes made
-              res.status(500).send({
-                error: "Update failed. This could be due to there being no changes to the user."
-              });
-            }
+          const result = await updateUser(req.body, req.params.id);
+          if(result) {
+            res.status(204).send();
+          } else {
+            //update fails if there's no changes made
+            res.status(500).send({
+              error: "Update failed. This could be due to there being no changes to the user."
+            });
           }
+          
         }
       } catch (err) {
         console.error(err);

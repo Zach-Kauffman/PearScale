@@ -9,8 +9,8 @@
     "dev": "nodemon server.js",
     "redis": "docker run -d --name redis-server -p 6379:6379 redis:latest",
     "docker-compose": "docker-compose down && docker-compose up -d --force-recreate",
-    "docker-workaround": "docker run -d --name pearscale-api --network pearscale -p \"27017:27017\" -v pearscale-vol:/data/db -e \"MONGO_INITDB_ROOT_USERNAME=peargod\" -e \"MONGO_INITDB_ROOT_PASSWORD=pear\" mongo:latest",
-    "docker-shell": "docker run --rm -it --network pearscale mongo:latest mongo --host pearscale-api --username peargod --password pear --authenticationDatabase admin"
+    "mongo-workaround": "docker run -d --name pearscale-api --network pearscale -p \"27017:27017\" -v pearscale-vol:/data/db -e \"MONGO_INITDB_ROOT_USERNAME=peargod\" -e \"MONGO_INITDB_ROOT_PASSWORD=pear\" mongo:latest",
+    "mongo-shell": "docker run --rm -it --network pearscale mongo:latest mongo --host pearscale-api --username peargod --password pear --authenticationDatabase admin"
   },
   "repository": {
     "type": "git",
