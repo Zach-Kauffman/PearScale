@@ -3,7 +3,8 @@ const redis = require('redis');
 const morgan = require('morgan');
 const api = require('./api');
 const { connectToDB } = require('./lib/mongo');
-const { requireAuthentication } = require('./lib/auth');
+const { checkAdmin } = require('./lib/auth');
+
 
 const app = express();
 
@@ -14,8 +15,8 @@ const redisClient = redis.createClient(
 );
 
 const rateLimitWindowMS = 60000;
-const rateLimitMaxRequests = 3;
-const rateLimitMaxRequestsAdmin = 6;
+const rateLimitWindowMSAdmin = 10000;
+const rateLimitMaxRequests = 5;
 const port = process.env.PORT || 8000;
 
 /*
@@ -54,40 +55,44 @@ function saveUserTokenBucket(ip, tokenBucket) {
     });
   });
 }
-async function rateLimit(req, res, next) {
-  try {
-    const tokenBucket = await getUserTokenBucket(req.ip);
 
-    const currentTimestamp = Date.now();
-    const ellapsedTime = currentTimestamp - tokenBucket.last;
-    const admin = true;
-    if (admin) {
-      tokenBucket.tokens += ellapsedTime *
-        (rateLimitMaxRequestsAdmin / rateLimitWindowMS);
-    }
-    else {
-      tokenBucket.tokens += ellapsedTime *
-        (rateLimitMaxRequests / rateLimitWindowMS);
-    }
-    tokenBucket.tokens = Math.min(
-      tokenBucket.tokens,
-      rateLimitMaxRequests
-    );
-    tokenBucket.last = currentTimestamp;
-
-    if (tokenBucket.tokens >= 1) {
-      tokenBucket.tokens -= 1;
-      await saveUserTokenBucket(req.ip, tokenBucket);
+const rateLimit = async function (req, res, next) {
+  
+  checkAdmin(req, res, async () => {
+    try {
+      const tokenBucket = await getUserTokenBucket(req.ip);
+  
+      const currentTimestamp = Date.now();
+      const ellapsedTime = currentTimestamp - tokenBucket.last;
+      console.log(req.user.admin);
+      if (req.user.admin) {
+        tokenBucket.tokens += ellapsedTime *
+          (rateLimitMaxRequests / rateLimitWindowMSAdmin);
+      }
+      else {
+        tokenBucket.tokens += ellapsedTime *
+          (rateLimitMaxRequests / rateLimitWindowMS);
+      }
+      tokenBucket.tokens = Math.min(
+        tokenBucket.tokens,
+        rateLimitMaxRequests
+      );
+      tokenBucket.last = currentTimestamp;
+  
+      if (tokenBucket.tokens >= 1) {
+        tokenBucket.tokens -= 1;
+        await saveUserTokenBucket(req.ip, tokenBucket);
+        next();
+      } else {
+  
+        res.status(429).send({
+          error: "Too many request per minute.  Please wait a bit..."
+        });
+      }
+    } catch (err) {
       next();
-    } else {
-
-      res.status(429).send({
-        error: "Too many request per minute.  Please wait a bit..."
-      });
     }
-  } catch (err) {
-    next();
-  }
+  });
 }
 
 app.use(rateLimit);
