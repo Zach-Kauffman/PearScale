@@ -3,14 +3,9 @@ const redis = require('redis');
 const morgan = require('morgan');
 const api = require('./api');
 const app = express();
-
-const { connectToDB } = require('./lib/mongo');
-
 const { connectToDB } = require('./lib/mongo');
 const { checkAdmin } = require('./lib/auth');
 
-
-const app = express();
 
 
 const redisClient = redis.createClient(
