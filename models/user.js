@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const { ObjectId, GridFSBucket } = require('mongodb');
 
 const { getDBReference } = require('../lib/mongo');
 const { extractValidFields } = require('../lib/validation');
@@ -94,6 +94,7 @@ async function updateUser(user, id) {
     user = extractValidFields(user, UserSchema);
     const db = getDBReference();
     const collection = db.collection('users');
+
     if (!ObjectId.isValid(id)) {
       return null;
     } else {
@@ -101,7 +102,7 @@ async function updateUser(user, id) {
         .updateOne(
           { _id: new ObjectId(id) }, 
           { $set: 
-            { name: user.name, email: user.email, password: user.password, admin: user.admin}
+            { ...user }
           },
           { upsert: true}
         );

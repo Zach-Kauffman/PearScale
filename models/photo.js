@@ -9,12 +9,21 @@ const PhotoSchema = {
 };
 exports.PhotoSchema = PhotoSchema;
 
+const acceptedFileTypes = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+}
+exports.acceptedFileTypes = acceptedFileTypes;
+
 const insertNewPear = async (image) => new Promise((resolve, reject) => {
     const db = getDBReference();
-    const bucket = new GridFSBucket(db, { bucketName: 'images' });
+    const bucket = new GridFSBucket(db, { bucketName: 'pears' });
     const metadata = {
       contentType: image.contentType,
-      userId: image.userId
+      title: image.title,
+      description: image.description,
+      userid: image.userid,
+      slice: image.slice
     };
     const uploadStream = bucket.openUploadStream(
       image.filename,
@@ -32,13 +41,13 @@ exports.insertNewPear = insertNewPear;
 
 exports.getImageDownloadStreamByFilename = function(filename) {
   const db = getDBReference();
-  const bucket = new GridFSBucket(db, { bucketName: 'images' });
+  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
   return bucket.openDownloadStreamByName(filename);
 };
 
 exports.getDownloadStreamById = function (id) {
   const db = getDBReference();
-  const bucket = new GridFSBucket(db, { bucketName: 'images' });
+  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
   if (!ObjectId.isValid(id)) {
     return null;
   } else {
@@ -48,7 +57,7 @@ exports.getDownloadStreamById = function (id) {
 
 exports.getImageInfoById = async function (id) {
   const db = getDBReference();
-  const bucket = new GridFSBucket(db, { bucketName: 'images' });
+  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
 
   if (!ObjectId.isValid(id)) {
     return null;
