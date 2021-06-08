@@ -75,6 +75,7 @@ router.get('/', async (req, res) => {
  */
 
 router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
+
   if (validateAgainstSchema(req.body, PearSchema) && req.file) {
     try {
       const slicename = req.params.slicename;
@@ -96,7 +97,13 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
       }
       const id = await insertNewPear(pear);
 
-      socket.emit('new pear', 'http://localhost:8000/media/' + `${id}`);
+      const toSend = {
+        img: 'http://localhost:8000/media/' + `${id}`,
+        title: image.title,
+        link: 'http://localhost:8000/slices/' + `${image.slice}/${id}`
+      };
+
+      socket.emit('new pear', toSend );
       res.status(201).send({
         id: id,
         links: {
