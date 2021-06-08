@@ -14,6 +14,8 @@ const {
   getSliceByName
 } = require('../models/slice');
 
+const io = require("socket.io-client");
+const socket = io("http://localhost:3000/");
 
 const { getUserById } = require('../models/user');
 
@@ -75,6 +77,7 @@ router.get('/', async (req, res) => {
  * Route to create a new pear.
  */
 router.post('/:slicename', upload.single('image'), async (req, res) => {
+  
   if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
     try {
       const image = {

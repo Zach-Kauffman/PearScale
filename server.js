@@ -7,10 +7,6 @@ const app = express();
 const { connectToDB } = require('./lib/mongo');
 
 
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
 
 const port = process.env.PORT || 8000;
 
@@ -26,21 +22,20 @@ app.use(express.static('public'));
  * top-level router lives in api/index.js.  That's what we include here, and
  * it provides all of the routes.
  */
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/client/index.html');
-});
 
 app.use('/', api);
 
+const io = require("socket.io-client");
+const socket = io("http://localhost:3000/");
 
-io.on('connection', (socket) => {
-  console.log('New connection');
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-  });
-  socket.on('disconnect', () => {
-      console.log('user disconnected');
-  });
+socket.on("connect", () => {
+  console.log("== Connected to Socket Server"); 
+});
+//Method to send message
+//socket.emit('chat message', "hello");
+
+socket.on("disconnect", () => {
+  console.log("== Disconnected to Socket Server");
 });
 
 app.use('*', function (req, res, next) {

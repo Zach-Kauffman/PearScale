@@ -23,12 +23,12 @@
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io('localhost');
+      var socket = io();
     
       var messages = document.getElementById('messages');
       var form = document.getElementById('form');
       var input = document.getElementById('input');
-      
+    
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
