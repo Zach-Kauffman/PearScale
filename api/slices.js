@@ -10,7 +10,7 @@ const {
   getSlicesPage,
   insertNewSlice,
   replaceSliceById,
-  deleteSliceById,
+  deleteSlice,
   getSliceByName
 } = require('../models/slice');
 
@@ -22,14 +22,11 @@ const {
   getPearById,
   getPearsBySlicename
 } = require('../models/pear');
-const {
-  insertNewPear
-} = require('../models/photo');
 
-const acceptedFileTypes = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png'
-}
+const {
+  insertNewPear,
+  acceptedFileTypes
+} = require('../models/photo');
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -78,7 +75,7 @@ router.get('/', async (req, res) => {
  */
 
 router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
-  console.log(req.body);
+
   if (validateAgainstSchema(req.body, PearSchema) && req.file) {
     try {
       const slicename = req.params.slicename;
@@ -89,7 +86,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
         })
         return;
       }
-      const image = {
+      const pear = {
         contentType: req.file.mimetype,
         path: req.file.path,
         filename: req.file.filename,
@@ -98,7 +95,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
         userid: req.user.id,
         slice: slicename
       }
-      const id = await insertNewPear(image);
+      const id = await insertNewPear(pear);
 
       const toSend = {
         img: 'http://localhost:8000/media/' + `${id}`,
@@ -110,7 +107,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
       res.status(201).send({
         id: id,
         links: {
-          pear: `/${image.slice}/pears/${id}`,
+          pear: `/${pear.slice}/pears/${id}`,
         }
       });
     } catch (err) {
@@ -258,9 +255,10 @@ router.put('/:slicename', requireAuthentication, async (req, res, next) => {
  * Route to delete a slice.
  */
 router.delete('/:id', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.userid || req.user.admin === 1) {
+  const slice = await getSliceByName(req.params.id);
+  if (req.user.id == slice.userid || req.user.admin == true) {
     try {
-      const deleteSuccessful = await deleteSliceById(parseInt(req.params.id));
+      const deleteSuccessful = await deleteSlice(req.params.id);
       if (deleteSuccessful) {
         res.status(204).end();
       } else {

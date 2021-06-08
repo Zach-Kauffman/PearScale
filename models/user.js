@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb');
+const { ObjectId, GridFSBucket } = require('mongodb');
 
 const { getDBReference } = require('../lib/mongo');
 const { extractValidFields } = require('../lib/validation');
@@ -9,17 +9,27 @@ const { extractValidFields } = require('../lib/validation');
 const UserSchema = {
   name: { required: true },
   email: {required: true },
-  password: { required: true }
+  password: { required: true },
+  admin: { required: false }
 
 };
 exports.UserSchema = UserSchema;
 
+async function checkForDuplicateEmail(email) {
+  const db = getDBReference();
+  const collection = db.collection('users');
+  const duplicate = await collection.find({email: email}).toArray();
+  console.log("Duplicate email:", duplicate.length > 0);
+  return duplicate;
+}
+exports.checkForDuplicateEmail = checkForDuplicateEmail;
+
 async function insertNewUser(user) {
   const db = getDBReference();
   const collection = db.collection('users');
-  const duplicate = await collection.find({email: user.email}).toArray();
-  if (duplicate.length > 0) {
-    return false
+  const isDupe = await checkForDuplicateEmail(user.email);
+  if(isDupe.length > 0) {
+    return false;
   }
   const results = await collection.insertOne(user);
   return results.insertedId;
@@ -80,18 +90,23 @@ exports.getUserById = getUserById;
 /*
  * Updates a user
  */
-async function updateUser(user) {
+async function updateUser(user, id) {
     user = extractValidFields(user, UserSchema);
     const db = getDBReference();
     const collection = db.collection('users');
-    
+
     if (!ObjectId.isValid(id)) {
       return null;
     } else {
       const results = await collection
-        .updateOne({ _id: new ObjectId(id) }, user)
-        .toArray();
-      return results[0];
+        .updateOne(
+          { _id: new ObjectId(id) }, 
+          { $set: 
+            { ...user }
+          },
+          { upsert: true}
+        );
+      return (results.modifiedCount === 1);
     }
 }
 exports.updateUser = updateUser;
@@ -101,19 +116,29 @@ exports.updateUser = updateUser;
 */
 async function deleteUser(id) {
     const db = getDBReference();
-    var collection = db.collection('user');
+    var collection = db.collection('users');
     if (!ObjectId.isValid(id)) {
       return null;
     } else {
         const userId = new ObjectId(id);
+        //first we delete the user from the 'users' collection
         await collection
-            .deleteOne({ _id: new ObjectId(id)})
-        collection = db.collection('pears');
+            .deleteOne({ _id: userId })
+        collection = db.collection('pears.files');
+
+        //pears are stored in pears.chunks (image binary) and pears.files (metadata)
+        //we must delete them from both of these collections
+        const userPears = await collection.find({'metadata.userid': id}).toArray();
+        for (const pear of userPears) {
+          await db.collection('pears.chunks').deleteOne({ '_id': pear._id });
+        }
         await collection
-            .deleteOne({ userid: new ObjectId(id)}) //Check
+            .deleteMany({ 'metadata.userid': id })
+        
+        //lastly we delete all reviews the user posted
         collection = db.collection('reviews');
         await collection
-            .deleteOne({ _id: new ObjectId(id)})
+            .deleteMany({ userid: id })
       return;
     }
 }

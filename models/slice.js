@@ -59,7 +59,8 @@ async function insertNewSlice(slice) {
     const result = await collection.insertOne({
       title: slice.title,
       description: slice.description,
-      userid: slice.id
+      userid: slice.userid
+
     });
     return result.insertedId;
 
@@ -80,6 +81,7 @@ async function getSliceByName(slicename) {
   const results = await collection
       .find({ "title": slicename })
       .toArray();
+  console.log(results);
     return results[0];
 }
 exports.getSliceByName = getSliceByName;
@@ -106,15 +108,26 @@ exports.getSliceDetailsByName = getSliceDetailsByName;
 /*
  * Deletes a slice given its id
  */
-async function deleteSlice(id) {
+async function deleteSlice(slice) {
     const db = getDBReference();
-    const collection = db.collection('slices');
-    if (!ObjectId.isValid(id)) {
-    return null;
-    } else {
-        const results = await collection
-            .deleteOne({ _id: new ObjectId(id)})
-        return;
+    var collection = db.collection('slices');
+
+    const results = await collection
+        .deleteOne({ title: slice});
+
+    collection = db.collection('pears.files');
+    //pears are stored in pears.chunks (image binary) and pears.files (metadata)
+    //we must delete them from both of these collections
+    const slicePears = await collection.find({'metadata.slice': slice}).toArray();
+    for (const pear of slicePears) {
+      const pearId = new ObjectId(pear._id);
+      await db.collection('pears.chunks').deleteOne({ 'files_id': pearId });
     }
+    await collection
+        .deleteMany({ 'metadata.slice': slice });
+
+
+    return (results.deletedCount > 0);
+    
 }
 exports.deleteSlice = deleteSlice;

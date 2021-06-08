@@ -11,7 +11,7 @@ const { getReviewsByPearId } = require('./review');
 const PearSchema = {
   title: { required: true },
   description: { required: false },
-  userid: {required: true},
+  userid: { required: false }
 };
 exports.PearSchema = PearSchema;
 
@@ -54,26 +54,26 @@ exports.getPearsPage = getPearsPage;
  * Executes a DB query to insert a new pear into the database.  Returns
  * a Promise that resolves to the ID of the newly-created pear entry.
  */
-const insertNewPear = async (pear) =>  new Promise((resolve, reject) => {
-  const db = getDBReference();
-  const bucket = new GridFSBucket(db, { bucketName: 'pears'});
-  const metadata = {
-    slice: pear.slice,
-    title: pear.title,
-    userid: pear.userid,
-    contentType: pear.contentType,
-    description: pear.description,
-  }
-  const uploadStream = bucket.openUploadStream(pear.filename, { metadata: metadata });
-  fs.createReadStream(pear.path).pipe(uploadStream)
-      .on('error', (err) => {
-        reject(err);
-      })
-      .on('finish', (result) => {
-        resolve(result._id);
-      });
-});
-exports.insertNewPear = insertNewPear;
+// const insertNewPear = async (pear) =>  new Promise((resolve, reject) => {
+//   const db = getDBReference();
+//   const bucket = new GridFSBucket(db, { bucketName: 'pears'});
+//   const metadata = {
+//     slice: pear.slice,
+//     title: pear.title,
+//     userid: pear.userid,
+//     contentType: pear.contentType,
+//     description: pear.description,
+//   }
+//   const uploadStream = bucket.openUploadStream(pear.filename, { metadata: metadata });
+//   fs.createReadStream(pear.path).pipe(uploadStream)
+//       .on('error', (err) => {
+//         reject(err);
+//       })
+//       .on('finish', (result) => {
+//         resolve(result._id);
+//       });
+// });
+// exports.insertNewPear = insertNewPear;
 
 /*
  * Updates a pear
@@ -124,6 +124,19 @@ async function getPearsBySlicename(slicename) {
   return results;
 }
 exports.getPearsBySlicename = getPearsBySlicename;
+
+//Gets all pears attatched to slicename //TODOGregory
+async function getPearsByUserId(id) {
+  const db = getDBReference();
+  const collection = db.collection('pears.files')
+  const bucket = new GridFSBucket(db, { bucketName: 'pears.files' });
+  const results = await collection
+    .find({ "metadata.userid": id })
+    .toArray();
+  console.log(results);
+  return results;
+}
+exports.getPearsByUserId = getPearsByUserId;
 
 
 /*

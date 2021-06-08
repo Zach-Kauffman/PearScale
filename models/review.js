@@ -37,17 +37,16 @@ async function hasUserReviewedPear(userid, pearid) {
   const db = getDBReference();
   const collection = db.collection('reviews');
   const reviews = await collection
-    .find({'pearid': pearid})
+    .find({'pearid': pearid, 'userid': userid})
     .toArray();
   //Check if owner is in the list of reviews on a pair
-  const results = reviews.some(review => (review.userid === userid));
-  return (results) ? false : true;
+  return (reviews.length > 0);
 }
 exports.hasUserReviewedPear = hasUserReviewedPear;
 /*
  * Updates a pear
  */
-async function updateReview(review) {
+async function updateReview(review, id) {
     review = extractValidFields(review, ReviewSchema);
     const db = getDBReference();
     const collection = db.collection('reviews');
@@ -56,12 +55,33 @@ async function updateReview(review) {
       return null;
     } else {
       const results = await collection
-        .updateOne({ _id: new ObjectId(id) }, review)
-        .toArray();
-      return results[0];
+      .updateOne(
+        { _id: new ObjectId(id) }, 
+          { $set: 
+            { text: review.text, rating: review.rating }
+          },
+          { upsert: true}
+        );
+        console.log("results", results.modifiedCount, results.matchedCount);
+      return (results.modifiedCount > 0);
     }
 }
 exports.updateReview = updateReview;
+
+async function getReviewById(id) {
+  const db = getDBReference();
+  const collection = db.collection('reviews');
+  if (!ObjectId.isValid(id)) {
+    return [];
+  } else {
+    const results = await collection
+      .find({ _id: new ObjectId(id) })
+      .toArray();
+    return results;
+  }
+}
+exports.getReviewById = getReviewById;
+
 /*
  * Returns all reviews attatched to a pare 
  * given an id
@@ -80,6 +100,21 @@ async function getReviewsByPearId(id) {
 }
 exports.getReviewsByPearId = getReviewsByPearId;
 
+
+async function getReviewsByUserId(id) {
+  const db = getDBReference();
+  const collection = db.collection('reviews');
+  if (!ObjectId.isValid(id)) {
+    return [];
+  } else {
+    const results = await collection
+      .find({ userid: id })
+      .toArray();
+    return results;
+  }
+}
+exports.getReviewsByUserId = getReviewsByUserId;
+
 /*
  * Deletes a review
  */
@@ -87,11 +122,12 @@ async function deleteReview(id) {
     const db = getDBReference();
     const collection = db.collection('reviews');
     if (!ObjectId.isValid(id)) {
-      return null;
+      return;
     } else {
       const results = await collection
-        .deleteOne({ _id: new ObjectId(id)})
-      return;
+        .deleteOne({ _id: new ObjectId(id)});
+      console.log(results);
+      return (results.deletedCount > 0);
     }
   }
   exports.deleteReview = deleteReview;
