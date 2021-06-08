@@ -75,7 +75,7 @@ router.get('/', async (req, res) => {
 /*
  * Route to create a new pear.
  */
-router.post('/:slicename', upload.single('image'), async (req, res) => {
+router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
   if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
     try {
       const slicename = req.params.slicename;
@@ -91,7 +91,7 @@ router.post('/:slicename', upload.single('image'), async (req, res) => {
         path: req.file.path,
         filename: req.file.filename,
         description: req.body.description,
-        ownerid: req.body.ownerid,
+        userid: req.user.id,
         slice: slicename
       }
       const id = await insertNewPear(image);
@@ -116,10 +116,11 @@ router.post('/:slicename', upload.single('image'), async (req, res) => {
 /*
  * Route to create a new slice.
  */
-router.post('/', async (req, res) => {
+router.post('/',requireAuthentication, async (req, res) => {
   const slice = {
     title: (req.body) ? req.body.title : undefined,
-    description: (req.body) ? (req.body.description) : undefined
+    description: (req.body) ? (req.body.description) : undefined,
+    userid: req.user.id
   };
   if (validateAgainstSchema(slice, SliceSchema)) {
     try {
@@ -208,7 +209,7 @@ router.get('/:slicename/:pearid', async (req, res, next) => {
  * Route to replace data for a slice.
  */
 router.put('/:slicename', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.ownerid || req.user.admin === 1) {
+  if (req.user.id == req.body.userid || req.user.admin === 1) {
     if (validateAgainstSchema(req.body, SliceSchema)) {
       try {
         const id = parseInt(req.params.id)
@@ -245,7 +246,7 @@ router.put('/:slicename', requireAuthentication, async (req, res, next) => {
  * Route to delete a slice.
  */
 router.delete('/:id', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.ownerid || req.user.admin === 1) {
+  if (req.user.id == req.body.userid || req.user.admin === 1) {
     try {
       const deleteSuccessful = await deleteSliceById(parseInt(req.params.id));
       if (deleteSuccessful) {
