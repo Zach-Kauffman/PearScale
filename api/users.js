@@ -105,9 +105,8 @@ router.post('/login', async (req, res) => {
 //Create new user
 //admin accounts can only be created with an admin auth token
 router.post('/', async (req, res, next) => {  
-  //if admin check admin
+  //if making an admin account, require auth
   if (req.body.admin == true) {
-
     requireAuthentication(req, res, async () => {
       //If user is admin then do it
       if (req.user.admin == true) {
@@ -178,33 +177,36 @@ router.post('/', async (req, res, next) => {
 /*
  * Route to list all of a user's pears.
  */
-router.get('/:id/pears', requireAuthentication, async (req, res, next) => {
-    if (req.user.id == req.params.id || req.user.admin == true) {
-      try {
-        const pears = await getPearsByUserId(req.params.id);
-        const user = await getUserById(req.params.id);
-        if(user.length === 0) {
-          res.status(404).send({error: "User not found"});
-        } else {
-          if (pears) {
-            res.status(200).send({ pears: pears });
-          } else {
-            next();
-          }
+router.get('/:id/pears', async (req, res, next) => {
+  try {
+    const pears = await getPearsByUserId(req.params.id);
+    const user = await getUserById(req.params.id);
+    const links = [];
+    for (const pear of pears) {
+      links.push({
+        ...pear,
+        links: {
+          image: `/media/${pear._id}`,
+          user: `/users/${pear.metadata.userid}`
         }
-      } catch (err) {
-        console.error(err);
-        res.status(500).send({
-          error: "Unable to fetch pears.  Please try again later."
-        });
-      }
-    }
-    else {
-      res.status(403).send({
-        error: "Unauthorized to access the specified resource"
       });
     }
-  });
+    if(user.length === 0) {
+      res.status(404).send({error: "User not found"});
+    } else {
+      if (pears) {
+        res.status(200).send( links );
+      } else {
+        next();
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      error: "Unable to fetch pears.  Please try again later."
+    });
+  }
+});
   
 /*
  * Route to list all of a user's reviews.

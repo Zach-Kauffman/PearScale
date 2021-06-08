@@ -133,6 +133,7 @@ async function getPearsByUserId(id) {
   const results = await collection
     .find({ "metadata.userid": id })
     .toArray();
+  console.log(results);
   return results;
 }
 exports.getPearsByUserId = getPearsByUserId;
