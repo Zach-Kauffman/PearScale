@@ -20,7 +20,10 @@ const insertNewPear = async (image) => new Promise((resolve, reject) => {
     const bucket = new GridFSBucket(db, { bucketName: 'pears' });
     const metadata = {
       contentType: image.contentType,
-      userid: image.userid
+      title: image.title,
+      description: image.description,
+      userid: image.userid,
+      slice: image.slice
     };
     const uploadStream = bucket.openUploadStream(
       image.filename,

@@ -81,6 +81,7 @@ async function getSliceByName(slicename) {
   const results = await collection
       .find({ "title": slicename })
       .toArray();
+  console.log(results);
     return results[0];
 }
 exports.getSliceByName = getSliceByName;
