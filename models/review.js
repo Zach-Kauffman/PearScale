@@ -87,7 +87,7 @@ async function getReviewsByUserId(id) {
     return [];
   } else {
     const results = await collection
-      .find({ userid: new ObjectId(id) })
+      .find({ userid: id })
       .toArray();
     return results;
   }

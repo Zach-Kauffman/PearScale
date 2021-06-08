@@ -57,7 +57,8 @@ async function insertNewSlice(slice) {
     const collection = db.collection('slices');
     const result = await collection.insertOne({
       title: slice.title,
-      description: slice.description
+      description: slice.description,
+      userid: slice.userid
     });
     return result.insertedId;
 
