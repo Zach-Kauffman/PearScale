@@ -2,6 +2,13 @@ const express = require('express');
 const redis = require('redis');
 const morgan = require('morgan');
 const api = require('./api');
+const app = express();
+
+const { connectToDB } = require('./lib/mongo');
+
+
+
+=======
 const { connectToDB } = require('./lib/mongo');
 const { checkAdmin } = require('./lib/auth');
 
@@ -101,8 +108,21 @@ app.use(rateLimit);
  * top-level router lives in api/index.js.  That's what we include here, and
  * it provides all of the routes.
  */
+
 app.use('/', api);
 
+const io = require("socket.io-client");
+const socket = io("http://localhost:3000/");
+
+socket.on("connect", () => {
+  console.log("== Connected to Socket Server"); 
+});
+//Method to send message
+//socket.emit('chat message', "hello");
+
+socket.on("disconnect", () => {
+  console.log("== Disconnected to Socket Server");
+});
 
 app.use('*', function (req, res, next) {
   res.status(404).json({
