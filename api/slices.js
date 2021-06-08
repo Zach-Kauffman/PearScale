@@ -98,6 +98,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
         slice: slicename
       }
       const id = await insertNewPear(image);
+      socket.emit('chat message', "hello");
       res.status(201).send({
         id: id,
         links: {

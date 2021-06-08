@@ -11,7 +11,7 @@ const { getReviewsByPearId } = require('./review');
 const PearSchema = {
   title: { required: true },
   description: { required: false },
-  ownerid: {required: true},
+  userid: {required: true},
 };
 exports.PearSchema = PearSchema;
 
@@ -60,7 +60,7 @@ const insertNewPear = async (pear) =>  new Promise((resolve, reject) => {
   const metadata = {
     slice: pear.slice,
     title: pear.title,
-    ownerid: pear.ownerid,
+    userid: pear.userid,
     contentType: pear.contentType,
     description: pear.description,
   }
