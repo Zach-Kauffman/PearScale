@@ -39,11 +39,12 @@
     
       socket.on('new pear', function(msg) {
         var item = document.createElement('li');
-        var link = document.createElement('a');
-        link.textContent = "Link";
-        link.href = msg;
-        link.target = "_blank";
-        item.appendChild(link);
+        var img = document.createElement('img');
+        //img.textContent = "Link";
+        img.src = msg;
+        //link.target = "_blank";
+        console.log(msg);
+        item.appendChild(img);
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
