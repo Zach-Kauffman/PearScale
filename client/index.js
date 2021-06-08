@@ -14,6 +14,9 @@ io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     io.emit('chat message', msg);
   });
+  socket.on('new pear', (msg) => {
+    io.emit('new pear', msg);
+  });
 });
 
 server.listen(3000, () => {
