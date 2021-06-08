@@ -52,6 +52,16 @@ exports.getImageDownloadStreamByFilename = function(filename) {
   return bucket.openDownloadStreamByName(filename);
 };
 
+exports.getDownloadStreamById = function (id) {
+  const db = getDBReference();
+  const bucket = new GridFSBucket(db, { bucketName: 'images' });
+  if (!ObjectId.isValid(id)) {
+    return null;
+  } else {
+    return bucket.openDownloadStream(new ObjectId(id));
+  }
+};
+
 exports.getImageInfoById = async function (id) {
   const db = getDBReference();
   const bucket = new GridFSBucket(db, { bucketName: 'images' });

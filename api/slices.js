@@ -9,7 +9,6 @@ const {
   SliceSchema,
   getSlicesPage,
   insertNewSlice,
-  getSliceDetailsById,
   replaceSliceById,
   deleteSliceById,
   getSliceByName
@@ -18,14 +17,13 @@ const {
 const io = require("socket.io-client");
 const socket = io("http://localhost:3000/");
 
-const { getUserById } = require('../models/user');
-
 const {
   PearSchema,
   insertNewPear,
   getPearById,
   getPearsBySlicename
 } = require('../models/pear');
+const { getDownloadStreamById } = require('../models/photo');
 
 const acceptedFileTypes = {
   'image/jpeg': 'jpg',
@@ -98,7 +96,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
         slice: slicename
       }
       const id = await insertNewPear(image);
-      socket.emit('chat message', "hello");
+      socket.emit('new pear', 'http://localhost:8000/slices/' + `${image.slice}/${id}`);
       res.status(201).send({
         id: id,
         links: {
@@ -191,7 +189,7 @@ router.get('/:slicename/:pearid', async (req, res, next) => {
     const slicename = req.params.slicename
     if (await getSliceByName(slicename)) {
       // Check if pear exists
-      const pearid = req.params.pearid
+      const pearid = req.params.pearid;
       const pears = await getPearById(pearid);
       console.log("pears:", pears);
       if (pears) {
