@@ -10,6 +10,7 @@ const { getReviewsBySliceId } = require('./review');
 const SliceSchema = {
   title: { required: true },
   description: { required: true },
+  userid: { required: true },
 };
 exports.SliceSchema = SliceSchema;
 
@@ -59,6 +60,7 @@ async function insertNewSlice(slice) {
       title: slice.title,
       description: slice.description,
       userid: slice.userid
+
     });
     return result.insertedId;
 

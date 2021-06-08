@@ -15,6 +15,8 @@ const {
   getSliceByName
 } = require('../models/slice');
 
+const io = require("socket.io-client");
+const socket = io("http://localhost:3000/");
 
 const { getUserById } = require('../models/user');
 
@@ -75,7 +77,8 @@ router.get('/', async (req, res) => {
 /*
  * Route to create a new pear.
  */
-router.post('/:slicename', upload.single('image'), async (req, res) => {
+
+router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
   if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
     try {
       const slicename = req.params.slicename;
@@ -92,10 +95,11 @@ router.post('/:slicename', upload.single('image'), async (req, res) => {
         filename: req.file.filename,
         title: req.body.title,
         description: req.body.description,
-        userid: req.body.userid,
+        userid: req.user.id,
         slice: slicename
       }
       const id = await insertNewPear(image);
+      socket.emit('chat message', "hello");
       res.status(201).send({
         id: id,
         links: {
@@ -117,11 +121,11 @@ router.post('/:slicename', upload.single('image'), async (req, res) => {
 /*
  * Route to create a new slice.
  */
-router.post('/', async (req, res) => {
+router.post('/',requireAuthentication, async (req, res) => {
   const slice = {
     title: (req.body) ? req.body.title : undefined,
     description: (req.body) ? (req.body.description) : undefined,
-    userid: (req.body) ? (req.body.userid) : undefined
+    userid: req.user.id
   };
   if (validateAgainstSchema(slice, SliceSchema)) {
     try {

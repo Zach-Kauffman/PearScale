@@ -41,6 +41,7 @@ async function hasUserReviewedPear(userid, pearid) {
     .toArray();
   //Check if owner is in the list of reviews on a pair
   return (reviews.length > 0);
+
 }
 exports.hasUserReviewedPear = hasUserReviewedPear;
 /*
