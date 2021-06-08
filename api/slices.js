@@ -78,7 +78,8 @@ router.get('/', async (req, res) => {
  */
 
 router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
-  if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
+  console.log(req.body);
+  if (validateAgainstSchema(req.body, PearSchema) && req.file) {
     try {
       const slicename = req.params.slicename;
       const exists = await getSliceByName(slicename);
@@ -92,13 +93,20 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
         contentType: req.file.mimetype,
         path: req.file.path,
         filename: req.file.filename,
+        title: req.body.title,
         description: req.body.description,
         userid: req.user.id,
         slice: slicename
       }
       const id = await insertNewPear(image);
 
-      socket.emit('new pear', 'http://localhost:8000/media/' + `${id}`);
+      const toSend = {
+        img: 'http://localhost:8000/media/' + `${id}`,
+        title: image.title,
+        link: 'http://localhost:8000/slices/' + `${image.slice}/${id}`
+      };
+
+      socket.emit('new pear', toSend );
       res.status(201).send({
         id: id,
         links: {
@@ -125,7 +133,6 @@ router.post('/',requireAuthentication, async (req, res) => {
     title: (req.body) ? req.body.title : undefined,
     description: (req.body) ? (req.body.description) : undefined,
     userid: req.user.id
-
   };
   if (validateAgainstSchema(slice, SliceSchema)) {
     try {

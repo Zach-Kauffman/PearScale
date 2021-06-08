@@ -40,16 +40,23 @@
       socket.on('new pear', function(msg) {
         var item = document.createElement('li');
         var img = document.createElement('img');
-        //img.textContent = "Link";
-        img.src = msg;
+        var link = document.createElement('a');
+        img.src = msg.img;
         img.width = 300;
         img.height = 300;
-        //link.target = "_blank";
-        console.log(msg);
+        link.href = msg.link;
+        link.textContent = msg.title;
+        link.target = "_blank";
+
+
+        
         item.appendChild(img);
+        item.appendChild(link);
+
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       });
+
       socket.on('chat message', function(msg) {
         var item = document.createElement('li');
         item.textContent = msg;
