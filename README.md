@@ -1,3 +1,3 @@
 # Final Project
 
-Something about pear porn
+The ONLY social media platform for pear fans!
