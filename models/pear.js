@@ -117,7 +117,7 @@ exports.getAllPears = getAllPears;
 async function getPearsBySlicename(slicename) {
   const db = getDBReference();
   // const collection = db.collection('images');
-  const bucket = new GridFSBucket(db, { bucketName: 'pears.files' });
+  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
   const results = await bucket
     .find({ "metadata.slice": slicename })
     .toArray();

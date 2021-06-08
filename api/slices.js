@@ -10,7 +10,7 @@ const {
   getSlicesPage,
   insertNewSlice,
   replaceSliceById,
-  deleteSliceById,
+  deleteSlice,
   getSliceByName
 } = require('../models/slice');
 
@@ -248,9 +248,10 @@ router.put('/:slicename', requireAuthentication, async (req, res, next) => {
  * Route to delete a slice.
  */
 router.delete('/:id', requireAuthentication, async (req, res, next) => {
-  if (req.user.id == req.body.userid || req.user.admin === 1) {
+  const slice = await getSliceByName(req.params.id);
+  if (req.user.id == slice.userid || req.user.admin == true) {
     try {
-      const deleteSuccessful = await deleteSliceById(parseInt(req.params.id));
+      const deleteSuccessful = await deleteSlice(req.params.id);
       if (deleteSuccessful) {
         res.status(204).end();
       } else {
