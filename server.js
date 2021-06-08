@@ -3,6 +3,7 @@ const redis = require('redis');
 const morgan = require('morgan');
 const api = require('./api');
 const { connectToDB } = require('./lib/mongo');
+const { requireAuthentication } = require('./lib/auth');
 
 const app = express();
 
@@ -13,6 +14,7 @@ const redisClient = redis.createClient(
 );
 
 const rateLimitWindowMS = 60000;
+const rateLimitWindowMSAdmin = 20000;
 const rateLimitMaxRequests = 5;
 
 const port = process.env.PORT || 8000;
@@ -23,9 +25,6 @@ const port = process.env.PORT || 8000;
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static('public'));
-
-
-
 
 function getUserTokenBucket(ip) {
   return new Promise((resolve, reject) => {
@@ -56,15 +55,21 @@ function saveUserTokenBucket(ip, tokenBucket) {
     });
   });
 }
-
 async function rateLimit(req, res, next) {
   try {
     const tokenBucket = await getUserTokenBucket(req.ip);
 
     const currentTimestamp = Date.now();
     const ellapsedTime = currentTimestamp - tokenBucket.last;
-    tokenBucket.tokens += ellapsedTime *
-      (rateLimitMaxRequests / rateLimitWindowMS);
+    const admin = true;
+    if (admin) {
+      tokenBucket.tokens += ellapsedTime *
+        (rateLimitMaxRequests / rateLimitWindowMSAdmin);
+    }
+    else {
+      tokenBucket.tokens += ellapsedTime *
+        (rateLimitMaxRequests / rateLimitWindowMS);
+    }
     tokenBucket.tokens = Math.min(
       tokenBucket.tokens,
       rateLimitMaxRequests
@@ -76,6 +81,7 @@ async function rateLimit(req, res, next) {
       await saveUserTokenBucket(req.ip, tokenBucket);
       next();
     } else {
+
       res.status(429).send({
         error: "Too many request per minute.  Please wait a bit..."
       });
