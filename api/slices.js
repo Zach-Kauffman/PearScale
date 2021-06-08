@@ -22,14 +22,11 @@ const {
   getPearById,
   getPearsBySlicename
 } = require('../models/pear');
-const {
-  insertNewPear
-} = require('../models/photo');
 
-const acceptedFileTypes = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png'
-}
+const {
+  insertNewPear,
+  acceptedFileTypes
+} = require('../models/photo');
 
 const upload = multer({
   storage: multer.diskStorage({

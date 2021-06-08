@@ -54,26 +54,26 @@ exports.getPearsPage = getPearsPage;
  * Executes a DB query to insert a new pear into the database.  Returns
  * a Promise that resolves to the ID of the newly-created pear entry.
  */
-const insertNewPear = async (pear) =>  new Promise((resolve, reject) => {
-  const db = getDBReference();
-  const bucket = new GridFSBucket(db, { bucketName: 'pears'});
-  const metadata = {
-    slice: pear.slice,
-    title: pear.title,
-    userid: pear.userid,
-    contentType: pear.contentType,
-    description: pear.description,
-  }
-  const uploadStream = bucket.openUploadStream(pear.filename, { metadata: metadata });
-  fs.createReadStream(pear.path).pipe(uploadStream)
-      .on('error', (err) => {
-        reject(err);
-      })
-      .on('finish', (result) => {
-        resolve(result._id);
-      });
-});
-exports.insertNewPear = insertNewPear;
+// const insertNewPear = async (pear) =>  new Promise((resolve, reject) => {
+//   const db = getDBReference();
+//   const bucket = new GridFSBucket(db, { bucketName: 'pears'});
+//   const metadata = {
+//     slice: pear.slice,
+//     title: pear.title,
+//     userid: pear.userid,
+//     contentType: pear.contentType,
+//     description: pear.description,
+//   }
+//   const uploadStream = bucket.openUploadStream(pear.filename, { metadata: metadata });
+//   fs.createReadStream(pear.path).pipe(uploadStream)
+//       .on('error', (err) => {
+//         reject(err);
+//       })
+//       .on('finish', (result) => {
+//         resolve(result._id);
+//       });
+// });
+// exports.insertNewPear = insertNewPear;
 
 /*
  * Updates a pear
@@ -117,7 +117,7 @@ exports.getAllPears = getAllPears;
 async function getPearsBySlicename(slicename) {
   const db = getDBReference();
   // const collection = db.collection('images');
-  const bucket = new GridFSBucket(db, { bucketName: 'pears' });
+  const bucket = new GridFSBucket(db, { bucketName: 'pears.files' });
   const results = await bucket
     .find({ "metadata.slice": slicename })
     .toArray();

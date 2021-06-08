@@ -9,6 +9,12 @@ const PhotoSchema = {
 };
 exports.PhotoSchema = PhotoSchema;
 
+const acceptedFileTypes = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png'
+}
+exports.acceptedFileTypes = acceptedFileTypes;
+
 const insertNewPear = async (image) => new Promise((resolve, reject) => {
     const db = getDBReference();
     const bucket = new GridFSBucket(db, { bucketName: 'pears' });

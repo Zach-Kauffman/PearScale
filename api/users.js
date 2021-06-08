@@ -240,7 +240,7 @@ router.get('/:id/reviews', requireAuthentication, async (req, res, next) => {
 //users may not set their email equal to another user's email
 router.patch('/:id', requireAuthentication, async (req, res, next) => {
   if (req.user.id == req.params.id || req.user.admin == true) {
-    if(validateAgainstSchema(req.body, UserSchema)) {
+    //if(validateAgainstSchema(req.body, UserSchema)) {
       try {
         if(req.body.admin == true && req.user.admin != true) {
           res.status(403).send({error: "Non-admins cannot edit admin permissions"});
@@ -272,10 +272,10 @@ router.patch('/:id', requireAuthentication, async (req, res, next) => {
           error: "Unable to update this user. Please try again later."
         });
       }
-    }
-    else {
-      res.status(500).send({error: "Invalid user body"});
-    }
+    // }
+    // else {
+    //   res.status(500).send({error: "Invalid user body"});
+    // }
   } 
   else {
     res.status(403).send({
