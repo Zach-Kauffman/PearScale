@@ -79,7 +79,8 @@ router.get('/', async (req, res) => {
  */
 
 router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
-  if (validateAgainstSchema(req.body, PearSchema) && req.file && req.body) {
+  console.log(req.body);
+  if (validateAgainstSchema(req.body, PearSchema) && req.file) {
     try {
       const slicename = req.params.slicename;
       const exists = await getSliceByName(slicename);
