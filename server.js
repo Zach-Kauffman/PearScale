@@ -14,9 +14,8 @@ const redisClient = redis.createClient(
 );
 
 const rateLimitWindowMS = 60000;
-const rateLimitWindowMSAdmin = 20000;
-const rateLimitMaxRequests = 5;
-
+const rateLimitMaxRequests = 3;
+const rateLimitMaxRequestsAdmin = 6;
 const port = process.env.PORT || 8000;
 
 /*
@@ -64,7 +63,7 @@ async function rateLimit(req, res, next) {
     const admin = true;
     if (admin) {
       tokenBucket.tokens += ellapsedTime *
-        (rateLimitMaxRequests / rateLimitWindowMSAdmin);
+        (rateLimitMaxRequestsAdmin / rateLimitWindowMS);
     }
     else {
       tokenBucket.tokens += ellapsedTime *
