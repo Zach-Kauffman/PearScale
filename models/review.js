@@ -37,11 +37,11 @@ async function hasUserReviewedPear(userid, pearid) {
   const db = getDBReference();
   const collection = db.collection('reviews');
   const reviews = await collection
-    .find({'pearid': pearid})
+    .find({'pearid': pearid, 'userid': userid})
     .toArray();
   //Check if owner is in the list of reviews on a pair
-  const results = reviews.some(review => (review.userid === userid));
-  return (results) ? false : true;
+  return (reviews.length > 0);
+
 }
 exports.hasUserReviewedPear = hasUserReviewedPear;
 /*
@@ -79,6 +79,21 @@ async function getReviewsByPearId(id) {
   }
 }
 exports.getReviewsByPearId = getReviewsByPearId;
+
+
+async function getReviewsByUserId(id) {
+  const db = getDBReference();
+  const collection = db.collection('reviews');
+  if (!ObjectId.isValid(id)) {
+    return [];
+  } else {
+    const results = await collection
+      .find({ userid: id })
+      .toArray();
+    return results;
+  }
+}
+exports.getReviewsByUserId = getReviewsByUserId;
 
 /*
  * Deletes a review

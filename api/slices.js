@@ -93,6 +93,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
         contentType: req.file.mimetype,
         path: req.file.path,
         filename: req.file.filename,
+        title: req.body.title,
         description: req.body.description,
         userid: req.user.id,
         slice: slicename
@@ -125,7 +126,6 @@ router.post('/',requireAuthentication, async (req, res) => {
     title: (req.body) ? req.body.title : undefined,
     description: (req.body) ? (req.body.description) : undefined,
     userid: req.user.id
-
   };
   if (validateAgainstSchema(slice, SliceSchema)) {
     try {
