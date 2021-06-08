@@ -19,11 +19,12 @@ const socket = io("http://localhost:3000/");
 
 const {
   PearSchema,
-  insertNewPear,
   getPearById,
   getPearsBySlicename
 } = require('../models/pear');
-const { getDownloadStreamById } = require('../models/photo');
+const {
+  insertNewPear
+} = require('../models/photo');
 
 const acceptedFileTypes = {
   'image/jpeg': 'jpg',
@@ -96,6 +97,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
         slice: slicename
       }
       const id = await insertNewPear(image);
+
       socket.emit('new pear', 'http://localhost:8000/slices/' + `${image.slice}/${id}`);
       res.status(201).send({
         id: id,

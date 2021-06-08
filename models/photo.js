@@ -9,20 +9,7 @@ const PhotoSchema = {
 };
 exports.PhotoSchema = PhotoSchema;
 
-
-
-
-
-
-exports.saveImageInfo = async function (image) {
-  const db = getDBReference();
-  const collection = db.collection('images');
-  const result = await collection.insertOne(image);
-  return result.insertedId;
-};
-
-exports.saveImageFile = function (image) {
-  return new Promise((resolve, reject) => {
+const insertNewPear = async (image) => new Promise((resolve, reject) => {
     const db = getDBReference();
     const bucket = new GridFSBucket(db, { bucketName: 'images' });
     const metadata = {
@@ -40,11 +27,8 @@ exports.saveImageFile = function (image) {
       .on('finish', (result) => {
         resolve(result._id);
       });
-      /*
-       * Remove file from fs.
-       */
-  });
-};
+});
+exports.insertNewPear = insertNewPear;
 
 exports.getImageDownloadStreamByFilename = function(filename) {
   const db = getDBReference();
@@ -69,7 +53,6 @@ exports.getImageInfoById = async function (id) {
   if (!ObjectId.isValid(id)) {
     return null;
   } else {
-
     const results = await bucket.find({ _id: new ObjectId(id) })
       .toArray();
     return results[0];
