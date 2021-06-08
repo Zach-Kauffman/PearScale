@@ -64,7 +64,6 @@ const rateLimit = async function (req, res, next) {
   
       const currentTimestamp = Date.now();
       const ellapsedTime = currentTimestamp - tokenBucket.last;
-      console.log(req.user.admin);
       if (req.user.admin) {
         tokenBucket.tokens += ellapsedTime *
           (rateLimitMaxRequests / rateLimitWindowMSAdmin);
