@@ -6,9 +6,6 @@ const app = express();
 
 const { connectToDB } = require('./lib/mongo');
 
-
-
-=======
 const { connectToDB } = require('./lib/mongo');
 const { checkAdmin } = require('./lib/auth');
 
