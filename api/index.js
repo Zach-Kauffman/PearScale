@@ -7,6 +7,10 @@ router.use('/media', require('./media'));
 
 module.exports = router;
 
+router.get('/', async (req, res) => {
+    console.log("swag");
+    res.render('home');
+});
 
 //         ████                                                
 //           ██                                                

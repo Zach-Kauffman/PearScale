@@ -1,6 +1,8 @@
 const express = require('express');
 const redis = require('redis');
 const morgan = require('morgan');
+const exphbs = require('express-handlebars');
+const path = require('path');
 const api = require('./api');
 const app = express();
 const { connectToDB } = require('./lib/mongo');
@@ -23,7 +25,13 @@ const port = process.env.PORT || 8000;
  */
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'client')));
+
+//set up views
+//taken from original pearscale 
+app.engine('hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
 
 function getUserTokenBucket(ip) {
   return new Promise((resolve, reject) => {

@@ -26,12 +26,15 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "express-handlebars": "^5.3.2",
     "fs": "^0.0.2",
+    "handlebars": "^4.7.7",
     "http": "*",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.6",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
+    "path": "^0.12.7",
     "redis": "^3.1.2",
     "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2"
