@@ -58,7 +58,8 @@ const login = async () => {
     const username = document.getElementById('username-input').value;
     const password = document.getElementById('password-input').value;
     const userInfo = {
-        username: username,
+        name: username,
+        email: username,
         password: password
     };
     if (username == '' || password == '') {
@@ -70,9 +71,11 @@ const login = async () => {
         body: JSON.stringify(userInfo),
         headers: {'Content-Type': 'application/json'}
     };
-    const response = await fetch('/login', options).catch((err) => {
+    console.log(options.body);
+    const response = await fetch('/users/login', options).catch((err) => {
         console.log(err);
     });
+    console.log(response);
     if (response.status === 401) {
         window.alert("Incorrect username or password");
         return;
@@ -117,10 +120,9 @@ const createAccount = async () => {
         return;
     }
     const userInfo = {
-        username: username,
+        name: username,
         password: password,
         email: email,
-        birthday: birthday
     };
 
 
@@ -130,7 +132,7 @@ const createAccount = async () => {
         headers: {'Content-Type': 'application/json'}
     };
 
-    const newUser = await (fetch('/createAccount', options).catch((err) => {
+    const newUser = await (fetch('/users/', options).catch((err) => {
         console.log(err);
     }));
 
