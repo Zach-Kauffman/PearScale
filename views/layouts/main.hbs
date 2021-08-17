@@ -25,10 +25,10 @@
             {{#if sessionUser}} {{!-- if user is logged in replace login button with a link to user page --}}
                 <li class="navitem navlink" id="account-button"><a
                         href="/users/{{sessionUser.Username}}">{{sessionUser.Username}}</a></li>
-                <li class="navitem logout" id="logout-button"><a href="#">Logout</a></li>
+                <li class="navitem logout" id="logout-button"><a href="logout">Logout</a></li>
             {{/if}}
             {{#unless sessionUser}}
-                <li class="navitem login" id="login-button"><a href="#">Login</a></li>
+                <li class="navitem login" id="login-button"><a href="login">Login</a></li>
             {{/unless}}
 
             <li class="navitem navbar-search">

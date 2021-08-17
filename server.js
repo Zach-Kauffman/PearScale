@@ -7,14 +7,13 @@ const api = require('./api');
 const app = express();
 const { connectToDB } = require('./lib/mongo');
 const { checkAdmin } = require('./lib/auth');
+const { auth, requiresAuth } = require('express-openid-connect');
 
-
-
+//rate limiting stuff
 const redisClient = redis.createClient(
   process.env.REDIS_PORT || '6379',
   process.env.REDIS_HOST || 'localhost'
 );
-
 const rateLimitWindowMS = 60000;
 const rateLimitWindowMSAdmin = 10000;
 const rateLimitMaxRequests = 5;
@@ -26,6 +25,18 @@ const port = process.env.PORT || 8000;
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client')));
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: 'TODO: USE A REAL SECRET TOKEN',
+  baseURL: 'http://localhost:8000',
+  clientID: 'TQoBYWHns8pKIx9eUet0VwerVy6bLpX4',
+  issuerBaseURL: 'https://pearscale.us.auth0.com'
+};
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
 
 //set up views
 //taken from original pearscale 
@@ -129,6 +140,11 @@ app.use('*', function (req, res, next) {
     error: "Requested resource " + req.originalUrl + " does not exist"
   });
 }); 
+
+// req.isAuthenticated is provided from the auth router
+app.get('/', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+});
 
 console.log("== Attempting to connect to Mongo...")
 connectToDB(() => {

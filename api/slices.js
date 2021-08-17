@@ -3,7 +3,7 @@ const router = require('express').Router();
 const multer = require('multer');
 const crypto = require('crypto');
 
-const { requireAuthentication } = require('../lib/auth');
+const { requiresAuth } = require('express-openid-connect');
 const { validateAgainstSchema } = require('../lib/validation');
 const {
   SliceSchema,
@@ -41,6 +41,15 @@ const upload = multer({
     callback(null, !!acceptedFileTypes[file.mimetype])
   }
 });
+
+
+//TODO: 
+// *properly get text from form (title and description)
+// *use the correct endpoint
+router.post('/upload', upload.single('image'), function(req, res) {
+  console.log(req.body);
+});
+
 /*
  * Route to return a paginated list of slices.
  */
@@ -74,8 +83,8 @@ router.get('/', async (req, res) => {
  * Route to create a new pear.
  */
 
-router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
-
+router.post('/:slicename', requiresAuth(), upload.single('image'), async (req, res) => {
+  console.log(req.body);
   if (validateAgainstSchema(req.body, PearSchema) && req.file) {
     try {
       const slicename = req.params.slicename;
@@ -125,7 +134,7 @@ router.post('/:slicename', requireAuthentication, upload.single('image'), async 
 /*
  * Route to create a new slice.
  */
-router.post('/',requireAuthentication, async (req, res) => {
+router.post('/',requiresAuth(), async (req, res) => {
   const slice = {
     title: (req.body) ? req.body.title : undefined,
     description: (req.body) ? (req.body.description) : undefined,
@@ -217,7 +226,7 @@ router.get('/:slicename/:pearid', async (req, res, next) => {
 /*
  * Route to replace data for a slice.
  */
-router.put('/:slicename', requireAuthentication, async (req, res, next) => {
+router.put('/:slicename', requiresAuth(), async (req, res, next) => {
   if (req.user.id == req.body.userid || req.user.admin === 1) {
     if (validateAgainstSchema(req.body, SliceSchema)) {
       try {
@@ -254,7 +263,7 @@ router.put('/:slicename', requireAuthentication, async (req, res, next) => {
 /*
  * Route to delete a slice.
  */
-router.delete('/:id', requireAuthentication, async (req, res, next) => {
+router.delete('/:id', requiresAuth(), async (req, res, next) => {
   const slice = await getSliceByName(req.params.id);
   if (req.user.id == slice.userid || req.user.admin == true) {
     try {
