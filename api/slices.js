@@ -46,8 +46,55 @@ const upload = multer({
 //TODO: 
 // *properly get text from form (title and description)
 // *use the correct endpoint
-router.post('/upload', upload.single('image'), function(req, res) {
+router.post('/upload', upload.single('image'), requiresAuth(), async(req, res) => {
   console.log(req.body);
+  
+  if (validateAgainstSchema(req.body, PearSchema) && req.file) {
+    try {
+      //const slicename = req.params.slicename;
+      const slicename = "Ripe";
+      const exists = await getSliceByName(slicename);
+      if (!exists) {
+        res.status(404).send({
+          error: "Slice not found"
+        })
+        return;
+      }
+      const pear = {
+        contentType: req.file.mimetype,
+        path: req.file.path,
+        filename: req.file.filename,
+        title: req.body.title,
+        description: req.body.description,
+        userid: req.user.id,
+        slice: slicename
+      }
+      const id = await insertNewPear(pear);
+
+      // const toSend = {
+      //   img: 'http://localhost:8000/media/' + `${id}`,
+      //   title: image.title,
+      //   link: 'http://localhost:8000/slices/' + `${image.slice}/${id}`
+      // };
+      // socket.emit('new pear', toSend );
+      
+      res.status(201).send({
+        id: id,
+        links: {
+          pear: `/${pear.slice}/pears/${id}`,
+        }
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({
+        error: "Error inserting photo into DB.  Please try again later."
+      });
+    }
+  } else {
+    res.status(400).send({
+      error: "Request body is not a valid pear object."
+    });
+  }
 });
 
 /*
