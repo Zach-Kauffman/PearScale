@@ -1,0 +1,25 @@
+
+
+.Header {
+    background-color: var(--header-green);
+}
+
+.NavBar {
+    background-color: var(--header-green);
+    font-size: 18px;
+    line-height: 22px;
+    display: inline-block;
+}
+
+.NavList {
+    margin: 0 0 0 20px;
+    padding: 0;
+}
+
+.Title {
+    padding: 0px 20px;
+    font-size: 30px;
+    background-color: var(--header-green);
+    color: #fff;
+    text-decoration: none;
+}

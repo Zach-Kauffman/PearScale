@@ -1,0 +1,18 @@
+.NavItem {
+    background-color: var(--header-green);
+    display: inline-block;
+    padding: 8px 10px;
+}
+
+.NavLink {
+    text-decoration: none;
+}
+
+.NavLink:hover,
+.NavLink:focus {
+    color: var(--button-green);
+}
+
+.NavLink.active {
+    box-shadow: inset 0 -3px var(--button-active);
+}

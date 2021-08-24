@@ -1,0 +1,10 @@
+:root {
+    --header-green: #D1E231;
+    --background-color: #F9FBE4;
+    --button-green: #78E231;
+    --button-active: #325D14;
+}
+
+.App {
+    margin: -10px;
+}
