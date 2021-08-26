@@ -5,10 +5,9 @@
 }
 
 .NavBar {
-    background-color: var(--header-green);
+    background-color: #fff;
     font-size: 18px;
     line-height: 22px;
-    display: inline-block;
 }
 
 .NavList {
