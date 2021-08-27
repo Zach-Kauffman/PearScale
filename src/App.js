@@ -16,8 +16,8 @@ class App extends React.Component {
 
     handlePearButtonClick() {
         this.setState({pearButtonPressed: !this.state.pearButtonPressed})
-        let status = this.state.pearButtonPressed ? "is not" : "is";
-        console.log("Pear button " + status + " pressed.");
+        let status = this.state.pearButtonPressed ? " not" : "";
+        console.log("Pear button is" + status + " pressed.");
     }
 
     handlePearModalCancel() {
@@ -27,6 +27,7 @@ class App extends React.Component {
 
     handlePearModalAccept() {
         console.log("Accept");
+        //TODO: add POST endpoint
     }
 
     renderPearModal() {

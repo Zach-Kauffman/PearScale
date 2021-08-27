@@ -12,15 +12,15 @@ function NavBar() {
             <ul className="NavList">
                 <NavLink 
                     value="Slices"
-                    link="www.google.com"
+                    link="slices/someSliceID"
                 />
                 <NavLink 
                     value="Login"
-                    link="www.google.com"
+                    link="auth0/auth0Endpoint"
                 />
                 <NavLink 
-                    value="Swag button"
-                    link="www.google.com"
+                    value="User Profile"
+                    link="users/someUserID"
                 />
             </ul>
         </nav>
