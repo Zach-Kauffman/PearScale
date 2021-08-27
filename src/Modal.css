@@ -1,4 +1,4 @@
-.ModalDialog {
+.Modal {
     width: auto;
     max-width: 600px;
     min-width: 350px;
@@ -6,7 +6,12 @@
     margin: 40px auto;
     background-color: #fff;
     border-radius: 15px;
-    position: relative;
+    position: fixed;
+    z-index: 9999;
+    left: 40%;
+    top: 10%;
+    border: 1px solid black;
+    filter: drop-shadow(0 0 0.75rem black);
 }
 
 .ModalHeader {

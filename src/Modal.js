@@ -21,8 +21,7 @@ class Modal extends React.Component {
 
     render() {
         return (
-            <div className="Modal">
-                <div className="ModalDialog">
+                <div className="Modal">
                     <div className="ModalHeader">
                         <h3 className="ModalTitle">{this.props.title}</h3>
                         <button type="button" className="ModalCloseButton" 
@@ -58,7 +57,7 @@ class Modal extends React.Component {
                         </button>
                     </div>
                 </div>
-            </div>
+
         );
     }
 }
