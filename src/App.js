@@ -1,8 +1,10 @@
 import React  from 'react';
 import NavBar from './NavBar';
+import Modal from './Modal';
+import Button from './Button';
 
 import './App.css';
-import Button from './Button';
+
 
 class App extends React.Component {
     constructor(props) {
@@ -14,8 +16,31 @@ class App extends React.Component {
 
     handlePearButtonClick() {
         this.setState({pearButtonPressed: !this.state.pearButtonPressed})
-        let status = this.state.pearButtonPressed ? "is" : "is not";
+        let status = this.state.pearButtonPressed ? "is not" : "is";
         console.log("Pear button " + status + " pressed.");
+    }
+
+    handlePearModalCancel() {
+        console.log("Cancel");
+        this.handlePearButtonClick();
+    }
+
+    handlePearModalAccept() {
+        console.log("Accept");
+    }
+
+    renderPearModal() {
+        if(this.state.pearButtonPressed) {
+            return (
+                <Modal 
+                    title="Post a Pear"
+                    handleCancel={() => this.handlePearModalCancel()}
+                    handleAccept={() => this.handlePearModalAccept()}
+                />
+            );
+        } else {
+            return;
+        }
     }
 
     render() {
@@ -26,6 +51,7 @@ class App extends React.Component {
                     icon="https://freeiconshop.com/wp-content/uploads/edd/pear-outline.png"
                     onClick={() => this.handlePearButtonClick()}
                 />
+                {this.renderPearModal()}
             </div>
         );
     } 
