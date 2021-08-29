@@ -5,58 +5,110 @@ import './Modal.css';
 class Modal extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            title: '',
+            description: '',
+            nsfw: false
+        }
+
+        this.fileInput = React.createRef();
+
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    // TODO
-    // renderModalBody() {
-    //     let Body = [];
-    //     for(let i = 0; i < this.props.body.length; i ++) {
-    //         Body.push(
-    //             <div className="ModalBodyInput">
-    //                 <label>this.props.body[i]</label>
-    //             </div>
-    //         );
-    //     }
-    // }
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        if(!this.fileInput.current.files[0]) {
+            alert("All pears require an image before posting");
+        } else {
+            const url = "http://localhost:8000/slices/Big";
+
+            const file = this.fileInput.current.files[0];
+            const data = {
+                title: this.state.title,
+                description: this.state.description,
+                nsfw: this.state.nsfw,
+                image: file
+            };
+            const response = await fetch( url, {
+                method: 'POST',
+                headers: {'Content-Type' : 'application/json'},
+                body: JSON.stringify(data)
+            }); 
+
+            console.log(response);
+
+            this.props.handleClose();
+        }
+    }
 
     render() {
         return (
-                <div className="Modal">
-                    <div className="ModalHeader">
-                        <h3 className="ModalTitle">{this.props.title}</h3>
-                        <button type="button" className="ModalCloseButton" 
-                            onClick={this.props.handleCancel}>&times;
-                        </button>
-                    </div>
-
+            <div className="Modal">
+                <div className="ModalHeader">
+                    <h3 className="ModalTitle">{this.props.title}</h3>
+                    <button type="button" className="ModalCloseButton"
+                        onClick={this.props.handleClose}>&times;
+                    </button>
+                </div>
+                <form onSubmit={this.handleSubmit}>
                     <div className="ModalBody">
+                        <label className="ModalBodyInput">
+                            Title
+                            <input
+                                name="title"
+                                type="text"
+                                value={this.state.title}
+                                onChange={this.handleInputChange} />
+                        </label>
+                        <br />
+                        <label className="ModalBodyInput">
+                            Image
+                            <input
+                                type="file"
+                                ref={this.fileInput} />
+                        </label>
+                        <br />
 
-                        <div className="ModalBodyInput">
-                            <label for="PearTitleInput">Title</label>
-                            <input type="text" id="PearTitleInput"></input>
-                        </div>
+                        <label className="ModalBodyInput">
+                            Description
+                            <textarea
+                                name="description"
+                                type="text"
+                                value={this.state.description}
+                                onChange={this.handleInputChange} />
+                        </label>
 
-                        <div className="ModalBodyInput">
-                            <label for="PearImageInput">Image</label>
-                            <input type="file" id="PearImageInput"></input>
-                        </div>
-
-                        <div className="ModalBodyInput">
-                            <label for="PearDescriptionInput">Description</label>
-                            <textarea id="PearDescriptionInput" placeholder="Optional"></textarea>
-                        </div>
+                        <label className="ModalBodyInput">
+                            NSFW
+                            <input
+                                name="nsfw"
+                                type="checkbox"
+                                checked={this.state.nsfw}
+                                onChange={this.handleInputChange} />
+                        </label>
 
                     </div>
 
                     <div className="ModalFooter">
-                        <button type="button" className="ModalCancelButton" 
-                            onClick={this.props.handleCancel}>Cancel
+                        <button type="button" className="ModalCancelButton"
+                            onClick={this.props.handleClose}>Cancel
                         </button>
-                        <button type="button" className="ModalAcceptButton" 
-                            onClick={this.props.handleAccept}>Accept
-                        </button>
+                        <input className="ModalAcceptButton" type="submit" value="Submit" />
                     </div>
-                </div>
+                </form>
+            </div>
 
         );
     }

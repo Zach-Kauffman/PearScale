@@ -74,7 +74,8 @@
 }
 
 .ModalFooter button, 
-.ModalCancelButton {
+.ModalCancelButton,
+.ModalAcceptButton {
     font-size: 20px;
     background-color: #fff;
     color: #333;
@@ -85,6 +86,7 @@
     cursor: pointer;
 }
 
-.ModalFooter button:hover {
+.ModalFooter button:hover,
+.ModalAcceptButton:hover {
     background-color: var(--header-green);
 }

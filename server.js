@@ -3,6 +3,8 @@ const redis = require('redis');
 const morgan = require('morgan');
 const exphbs = require('express-handlebars');
 const path = require('path');
+const cors = require('cors');
+
 const api = require('./api');
 const app = express();
 const { connectToDB } = require('./lib/mongo');
@@ -32,6 +34,9 @@ app.use(express.static(path.join(__dirname, 'client')));
 app.engine('hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
+
+//use cors so that we can run api calls on the local machine
+app.use(cors());
 
 function getUserTokenBucket(ip) {
   return new Promise((resolve, reject) => {

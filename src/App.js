@@ -13,7 +13,28 @@ class App extends React.Component {
         this.state = {
             pearButtonPressed: false,
             pears: [],
+            
         };
+    }
+
+    async componentDidMount() {
+        const url = "http://localhost:8000/slices/Ripe";
+        const response = await fetch(url);
+        const pearDB = await response.json();
+        const pears = this.state.pears.slice();
+        
+        for(let i = 0; i < pearDB.pears.length; i ++) {
+            pears.push({
+                title: pearDB.pears[i].metadata.title,
+                description: pearDB.pears[i].metadata.description,
+                user: "Cool Guy",
+                image: "https://www.gisymbol.com/wp-content/webp-express/webp-images/uploads/2017/08/Australian-Pears-600x600.png.webp"
+            });
+        }
+
+        this.setState({
+            pears: pears
+        });
     }
 
     handlePearButtonClick() {
@@ -22,7 +43,7 @@ class App extends React.Component {
         console.log("Pear button is" + status + " pressed.");
     }
 
-    handlePearModalCancel() {
+    handlePearModalClose() {
         console.log("Cancel");
         this.handlePearButtonClick();
     }
@@ -48,7 +69,7 @@ class App extends React.Component {
             return (
                 <Modal 
                     title="Post a Pear"
-                    handleCancel={() => this.handlePearModalCancel()}
+                    handleClose={() => this.handlePearModalClose()}
                     handleAccept={() => this.handlePearModalAccept()}
                 />
             );
