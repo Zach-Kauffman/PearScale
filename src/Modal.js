@@ -8,13 +8,39 @@ class Modal extends React.Component {
         this.state = {
             title: '',
             description: '',
-            nsfw: false
+            nsfw: false,
+            slices: [],
+            slice: 'Ripe',
         }
 
         this.fileInput = React.createRef();
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    async componentDidMount() {
+        const url = "http://localhost:8000/slices";
+        const response = await fetch(url);
+        const slicesDB = await response.json();
+        const slices = [];
+        for (let i = 0; i < slicesDB.slices.length; i++) {
+            slices.push(slicesDB.slices[i].title);
+        }
+        console.log(slicesDB);
+        this.setState({
+            slices: slices
+        });
+    }
+
+    slicesDropdown() {
+        let toReturn = [];
+        for (let i = 0; i < this.state.slices.length; i++) {
+            toReturn.push(
+                <option key={i} value={this.state.slices[i]}>{this.state.slices[i]}</option>
+            );
+        }
+        return toReturn;
     }
 
     handleInputChange(event) {
@@ -29,10 +55,10 @@ class Modal extends React.Component {
 
     async handleSubmit(event) {
         event.preventDefault();
-        if(!this.fileInput.current.files[0]) {
+        if (!this.fileInput.current.files[0]) {
             alert("All pears require an image before posting");
         } else {
-            const url = "http://localhost:8000/slices/Big";
+            const url = "http://localhost:8000/slices/" + this.state.slice;
 
             const file = this.fileInput.current.files[0];
             const data = {
@@ -41,11 +67,11 @@ class Modal extends React.Component {
                 nsfw: this.state.nsfw,
                 image: file
             };
-            const response = await fetch( url, {
+            const response = await fetch(url, {
                 method: 'POST',
-                headers: {'Content-Type' : 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-            }); 
+            });
 
             console.log(response);
 
@@ -89,6 +115,14 @@ class Modal extends React.Component {
                                 value={this.state.description}
                                 onChange={this.handleInputChange} />
                         </label>
+
+                        <label className="ModalBodyInput">
+                            Slice
+                            <select name="slice" value={this.state.slice} onChange={this.handleInputChange}>
+                                {this.slicesDropdown()}
+                            </select>
+                        </label>
+
 
                         <label className="ModalBodyInput">
                             NSFW

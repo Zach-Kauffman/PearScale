@@ -17,12 +17,18 @@ class App extends React.Component {
         };
     }
 
+
+    //when homepage is loaded, do this stuff
     async componentDidMount() {
-        const url = "http://localhost:8000/slices/Ripe";
+
+        //fetches a list of all pears from the Ripe slice
+        const url = "http://localhost:8000/slices/Big";
         const response = await fetch(url);
         const pearDB = await response.json();
         const pears = this.state.pears.slice();
         
+        //has to get the image for each pear individually
+        //TODO: make a new endpoint which returns all images for all pears in a given slice
         for(let i = 0; i < pearDB.pears.length; i ++) {
             let url = "http://localhost:8000/media/" + pearDB.pears[i]._id;
             let image;
@@ -38,6 +44,7 @@ class App extends React.Component {
             });
         }
 
+        //updates the state with all the pears we just got from the database
         this.setState({
             pears: pears
         });
