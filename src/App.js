@@ -63,7 +63,7 @@ class App extends React.Component {
             toReturn.unshift(
             <div key={i}>
                 <Pear 
-                    title={this.state.pears[i].title + " #" + i}
+                    title={this.state.pears[i].title + " #" + (i + 1)}
                     description={this.state.pears[i].description}
                     user={this.state.pears[i].user}
                     image={this.state.pears[i].image}
