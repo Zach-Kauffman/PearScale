@@ -24,11 +24,17 @@ class App extends React.Component {
         const pears = this.state.pears.slice();
         
         for(let i = 0; i < pearDB.pears.length; i ++) {
+            let url = "http://localhost:8000/media/" + pearDB.pears[i]._id;
+            let image;
+            await fetch(url).then(response => response.blob()).then(blob => {
+                const objectURL = URL.createObjectURL(blob);
+                image = objectURL;
+            });
             pears.push({
                 title: pearDB.pears[i].metadata.title,
                 description: pearDB.pears[i].metadata.description,
                 user: "Cool Guy",
-                image: "https://www.gisymbol.com/wp-content/webp-express/webp-images/uploads/2017/08/Australian-Pears-600x600.png.webp"
+                image: image
             });
         }
 
@@ -84,7 +90,7 @@ class App extends React.Component {
             toReturn.unshift(
             <div key={i}>
                 <Pear 
-                    title={this.state.pears[i].title + " #" + (i + 1)}
+                    title={this.state.pears[i].title}
                     description={this.state.pears[i].description}
                     user={this.state.pears[i].user}
                     image={this.state.pears[i].image}

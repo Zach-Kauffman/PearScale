@@ -19,7 +19,7 @@ const redisClient = redis.createClient(
 
 const rateLimitWindowMS = 60000;
 const rateLimitWindowMSAdmin = 10000;
-const rateLimitMaxRequests = 5;
+const rateLimitMaxRequests = 50000;
 const port = process.env.PORT || 8000;
 
 /*
