@@ -1,5 +1,6 @@
 .Header {
     background-color: var(--header-green);
+    margin:-10px;
 }
 
 .NavBar {

@@ -12,8 +12,6 @@ const history = createBrowserHistory();
 ReactDOM.render(
     <Router history={history}>
         <NavBar />
-
-
         <Switch>
             <Route path="/User">
                 <User />
