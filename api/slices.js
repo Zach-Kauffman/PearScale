@@ -74,7 +74,7 @@ router.get('/', async (req, res) => {
  * Route to create a new pear.
  */
 
-router.post('/:slicename', requireAuthentication, upload.single('image'), async (req, res) => {
+router.post('/:slicename', upload.single('image'), async (req, res) => {
 
   if (validateAgainstSchema(req.body, PearSchema) && req.file) {
     try {

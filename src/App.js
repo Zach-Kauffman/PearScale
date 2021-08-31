@@ -22,7 +22,7 @@ class App extends React.Component {
     async componentDidMount() {
 
         //fetches a list of all pears from the Ripe slice
-        const url = "http://localhost:8000/slices/Big";
+        const url = "http://localhost:8000/slices/Ripe";
         const response = await fetch(url);
         const pearDB = await response.json();
         const pears = this.state.pears.slice();
@@ -110,7 +110,6 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <NavBar />
                 <Button 
                     icon="https://freeiconshop.com/wp-content/uploads/edd/pear-outline.png"
                     onClick={() => this.handlePearButtonClick()}

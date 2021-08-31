@@ -1,5 +1,5 @@
 import React from 'react';
-import NavLink from './NavItem';
+import NavItem from './NavItem';
 
 import './NavBar.css';
 
@@ -10,17 +10,17 @@ function NavBar() {
 
         <nav className="NavBar">
             <ul className="NavList">
-                <NavLink 
+                <NavItem 
                     value="Slices"
                     link="slices/someSliceID"
                 />
-                <NavLink 
+                <NavItem 
                     value="Login"
                     link="auth0/auth0Endpoint"
                 />
-                <NavLink 
+                <NavItem 
                     value="User Profile"
-                    link="users/someUserID"
+                    link="User"
                 />
             </ul>
         </nav>

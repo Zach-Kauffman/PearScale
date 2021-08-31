@@ -64,7 +64,6 @@ class Modal extends React.Component {
             const data = {
                 title: this.state.title,
                 description: this.state.description,
-                nsfw: this.state.nsfw,
                 image: file
             };
             const response = await fetch(url, {
