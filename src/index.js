@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history';
 import App from './App';
 import User from './User';
 import NavBar from './NavBar';
+import BigPear from './BigPear';
 
 const history = createBrowserHistory();
 
@@ -15,6 +16,9 @@ ReactDOM.render(
         <Switch>
             <Route path="/User">
                 <User />
+            </Route>
+            <Route path="/Slice">
+                <BigPear />
             </Route>
             <Route path="/">
                 <App />

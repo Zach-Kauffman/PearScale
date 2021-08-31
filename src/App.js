@@ -29,18 +29,22 @@ class App extends React.Component {
         
         //has to get the image for each pear individually
         //TODO: make a new endpoint which returns all images for all pears in a given slice
+        //this avoids doing numerous API calls every time we load the homepage
         for(let i = 0; i < pearDB.pears.length; i ++) {
             let url = "http://localhost:8000/media/" + pearDB.pears[i]._id;
+            console.log(pearDB.pears[i]._id);
             let image;
             await fetch(url).then(response => response.blob()).then(blob => {
                 const objectURL = URL.createObjectURL(blob);
                 image = objectURL;
             });
             pears.push({
+                id: pearDB.pears[i]._id,
                 title: pearDB.pears[i].metadata.title,
                 description: pearDB.pears[i].metadata.description,
                 user: "Cool Guy",
-                image: image
+                image: image,
+                slice: pearDB.pears[i].metadata.slice
             });
         }
 
@@ -97,10 +101,12 @@ class App extends React.Component {
             toReturn.unshift(
             <div key={i}>
                 <Pear 
+                    id={this.state.pears[i].id}
                     title={this.state.pears[i].title}
                     description={this.state.pears[i].description}
                     user={this.state.pears[i].user}
                     image={this.state.pears[i].image}
+                    slice={this.state.pears[i].slice}
                 />
             </div>);
         }
