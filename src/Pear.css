@@ -1,0 +1,73 @@
+.Pear {
+    flex: 0 1 300;
+    display: flex;
+    margin: 4px;
+    padding: 2px;
+    border: 1px solid #dadada;
+    border-radius: 5px;
+    background-color: #fff;
+    flex-direction: column;
+    height: 420px;
+}
+
+.PearImageContainer {
+    width: 100%;
+    height: 400px;
+    border-radius: 5px;
+}
+
+.PearImageContainer:hover {
+    filter: brightness(25%);
+    cursor: pointer;
+}
+
+.PearImage {
+    display: block;
+    width: 100%;
+    min-width: 300px;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.PearContent {
+    flex: 1 10 20%;
+    position: relative;
+    background-color: white;
+}
+
+.PearAuthor {
+    margin-top: 8px;
+    margin-bottom: 0;
+    text-align: right;
+    font-weight: bold;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+}
+
+.PearTitle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 0;
+}
+
+.PearRating {
+    color: var(--header-green);
+    margin-bottom: 0px;
+    font-size: 35px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    text-shadow: -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.PearRating:hover {
+    cursor: default;
+}

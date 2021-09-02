@@ -1,8 +1,9 @@
 const express = require('express');
 const redis = require('redis');
 const morgan = require('morgan');
-const exphbs = require('express-handlebars');
 const path = require('path');
+const cors = require('cors');
+
 const api = require('./api');
 const app = express();
 const { connectToDB } = require('./lib/mongo');
@@ -17,7 +18,7 @@ const redisClient = redis.createClient(
 
 const rateLimitWindowMS = 60000;
 const rateLimitWindowMSAdmin = 10000;
-const rateLimitMaxRequests = 5;
+const rateLimitMaxRequests = 50000;
 const port = process.env.PORT || 8000;
 
 /*
@@ -27,11 +28,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client')));
 
-//set up views
-//taken from original pearscale 
-app.engine('hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
-app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, 'views'));
+//use cors so that we can run api calls on the local machine
+app.use(cors());
 
 function getUserTokenBucket(ip) {
   return new Promise((resolve, reject) => {

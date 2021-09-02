@@ -1,0 +1,22 @@
+:root {
+    --header-green: #D1E231;
+    --background-color: #F9FBE4;
+    --button-green: #78E231;
+    --button-active: #325D14;
+}
+
+.App {
+    background-color: var(--background-color);
+}
+
+body {
+    margin: 0;
+    background-color: var(--background-color);
+    font-family: sans-serif;
+}
+
+.PearContainer {
+    margin: 15px 5%;
+    display: flex;
+    flex-wrap: wrap;
+}
