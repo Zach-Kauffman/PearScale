@@ -153,13 +153,13 @@ router.post('/:slicename', requiresAuth(), upload.single('image'), async (req, r
       }
       const id = await insertNewPear(pear);
 
-      const toSend = {
-        img: 'http://localhost:8000/media/' + `${id}`,
-        title: image.title,
-        link: 'http://localhost:8000/slices/' + `${image.slice}/${id}`
-      };
+      // const toSend = {
+      //   img: 'http://localhost:8000/media/' + `${id}`,
+      //   title: image.title,
+      //   link: 'http://localhost:8000/slices/' + `${image.slice}/${id}`
+      // };
 
-      socket.emit('new pear', toSend );
+      // socket.emit('new pear', toSend );
       res.status(201).send({
         id: id,
         links: {
