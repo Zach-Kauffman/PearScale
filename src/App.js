@@ -17,10 +17,8 @@ class App extends React.Component {
         };
     }
 
-
     //when homepage is loaded, do this stuff
     async componentDidMount() {
-
         //fetches a list of all pears from the Ripe slice
         const url = "http://localhost:8000/slices/Ripe";
         const response = await fetch(url);
@@ -65,29 +63,12 @@ class App extends React.Component {
         this.handlePearButtonClick();
     }
 
-    handlePearModalAccept() {
-        console.log("Accept");
-        const pears = this.state.pears.slice();
-        pears.push({
-            title: "Cool Pear",
-            description: "This is a very cool pear",
-            user: "Cool Guy",
-            image: "https://www.gisymbol.com/wp-content/webp-express/webp-images/uploads/2017/08/Australian-Pears-600x600.png.webp"
-        });
-        this.setState({
-            pears: pears,
-            pearButtonPressed: false,
-        });
-        //TODO: add POST endpoint
-    }
-
     renderPearModal() {
         if(this.state.pearButtonPressed) {
             return (
                 <Modal 
                     title="Post a Pear"
-                    handleClose={() => this.handlePearModalClose()}
-                    handleAccept={() => this.handlePearModalAccept()}
+                    handleClose={() => this.handlePearModalClose()}   
                 />
             );
         } else {
