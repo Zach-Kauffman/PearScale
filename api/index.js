@@ -9,7 +9,6 @@ module.exports = router;
 
 router.get('/', async (req, res) => {
     console.log("== Got request for homepage...");
-    res.render('home');
 });
 
 //         ████                                                

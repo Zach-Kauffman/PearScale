@@ -27,18 +27,6 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'client')));
 
-const config = {
-  authRequired: false,
-  auth0Logout: true,
-  secret: 'TODO: USE A REAL SECRET TOKEN',
-  baseURL: 'http://localhost:8000',
-  clientID: 'TQoBYWHns8pKIx9eUet0VwerVy6bLpX4',
-  issuerBaseURL: 'https://pearscale.us.auth0.com'
-};
-
-// auth router attaches /login, /logout, and /callback routes to the baseURL
-app.use(auth(config));
-
 //use cors so that we can run api calls on the local machine
 app.use(cors());
 

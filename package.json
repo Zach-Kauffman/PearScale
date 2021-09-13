@@ -26,6 +26,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@auth0/auth0-react": "^1.6.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.15",
@@ -33,6 +34,7 @@
     "babel-plugin-macros": "^3.1.0",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "express-openid-connect": "^2.5.0",
     "fs": "^0.0.2",
     "http": "*",
     "jsonwebtoken": "^8.5.1",
