@@ -7,7 +7,7 @@ import './NavBar.css';
 import LoginButton from './auth/LoginButton';
 import { useAuth0 } from '@auth0/auth0-react';
 import LogoutButton from './auth/LogoutButton';
-import UserButton from './auth/UserButton';
+import ProfileButton from './auth/ProfileButton';
 
 
 function NavBar() {
@@ -25,7 +25,7 @@ function NavBar() {
                     />
                     <LoginButton/>
                     <LogoutButton/>
-                    <UserButton/>
+                    <ProfileButton/>
                     <li className="Search">
                         <input type="text" id="SearchInput" placeholder="Find the pearfect pear..." />
                         <button type="button" id="SearchButton"><a href="#"></a><FontAwesomeIcon icon={faSearch} /></button>

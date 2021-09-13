@@ -8,6 +8,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 
 import App from './App';
 import User from './User';
+import Profile from './Profile';
 import NavBar from './NavBar';
 import BigPear from './BigPear';
 
@@ -24,6 +25,9 @@ ReactDOM.render(
             <Switch>
                 <Route path="/User">
                     <User />
+                </Route>
+                <Route path="/Profile">
+                    <Profile />
                 </Route>
                 <Route path="/Slice">
                     <BigPear />

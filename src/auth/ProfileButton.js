@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 
-function UserButton() {
+function ProfileButton() {
   const {
     isAuthenticated,
     user,
@@ -12,9 +12,9 @@ function UserButton() {
 
   return isAuthenticated && (
     <li className="NavItem">
-        <Link to="/Account" className="NavLink" >Account</Link>
+        <Link to="/Profile" className="NavLink" >Account</Link>
     </li>
   );
 }
 
-export default UserButton;
+export default ProfileButton;

@@ -20,23 +20,20 @@ class User extends React.Component {
     }
 
     render() {
-        const isCurrentUser = this.getRandomInt(0,2);
         const hasPears = this.getRandomInt(0,2);
         return(
             <div className = "UserContainer" >
                 <h1 className="UserGreeting">
-                    welcome {isCurrentUser ? "to the home of " : "home "}
+                    welcome to the home of
                     <p className="Username">
-                        {isCurrentUser ? "RANDOM USER " : "ACTIVE USER "}
+                        RANDOM USER
                     </p>
                 </h1>
 
                 <div className="PearContainer">
                     <h2>
                         {
-                            isCurrentUser ? 
-                                (hasPears ? "This user hasn't posted any pears yet :(" : "RANDOM USER'S pears:") :
-                                (hasPears ? "You haven't posted any pears yet :(" : "Your pears:")      
+                            hasPears ? "This user hasn't posted any pears yet :(" : "RANDOM USER'S pears:"
                         }
                     </h2>
                     {this.getUserPears()}
