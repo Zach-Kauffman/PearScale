@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const redis = require('redis');
 const morgan = require('morgan');
@@ -8,7 +10,6 @@ const api = require('./api');
 const app = express();
 const { connectToDB } = require('./lib/mongo');
 const { checkAdmin } = require('./lib/auth');
-const { auth, requiresAuth } = require('express-openid-connect');
 
 //rate limiting stuff
 const redisClient = redis.createClient(
@@ -126,11 +127,6 @@ app.use('*', function (req, res, next) {
     error: "Requested resource " + req.originalUrl + " does not exist"
   });
 }); 
-
-// req.isAuthenticated is provided from the auth router
-app.get('/', (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-});
 
 console.log("== Attempting to connect to Mongo...")
 connectToDB(() => {
