@@ -1,6 +1,9 @@
 import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 import './Modal.css';
+
+//const {isAuthenticated, user, getIdTokenClaims} = useAuth0();
 
 class Modal extends React.Component {
     constructor(props) {
@@ -20,6 +23,9 @@ class Modal extends React.Component {
     }
 
     async componentDidMount() {
+        // const claims = await getIdTokenClaims();
+        // const id_token = claims.__raw;
+        // console.log(id_token);
         const url = "http://localhost:8000/slices";
         const response = await fetch(url);
         const slicesDB = await response.json();
